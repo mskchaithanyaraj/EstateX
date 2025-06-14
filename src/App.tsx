@@ -1,13 +1,15 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Profile from "./pages/Profile";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/" element={<Profile />} />
@@ -15,7 +17,7 @@ const App = () => {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 };
 
