@@ -1,6 +1,6 @@
 import React from "react";
 import { CheckCircle, AlertCircle, Info, X } from "lucide-react";
-import toast, { Toast } from "react-hot-toast";
+import toast, { type Toast } from "react-hot-toast";
 
 interface CustomToastProps {
   t: Toast;

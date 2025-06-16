@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import {
   Eye,
   EyeOff,
@@ -15,9 +14,9 @@ import {
   Home,
 } from "lucide-react";
 import { authAPI } from "../services/api";
-import CustomToast from "../components/CustomeToast";
 import { signupSchema } from "../schemas/auth.schemas";
 import type { SignupData, SignupFormData } from "../types/auth.types";
+import { showErrorToast, showSuccessToast } from "../utils/custom-toast";
 
 const SignUp: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,19 +35,6 @@ const SignUp: React.FC = () => {
   });
 
   const password = watch("password");
-
-  // Custom toast functions
-  const showSuccessToast = (title: string, message?: string) => {
-    toast.custom((t) => (
-      <CustomToast t={t} type="success" title={title} message={message} />
-    ));
-  };
-
-  const showErrorToast = (title: string, message?: string) => {
-    toast.custom((t) => (
-      <CustomToast t={t} type="error" title={title} message={message} />
-    ));
-  };
 
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
