@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,8 +12,6 @@ import {
   AlertCircle,
   ArrowRight,
   Home,
-  Loader2,
-  X,
 } from "lucide-react";
 import { authAPI } from "../services/api";
 import { signupSchema, signinSchema } from "../schemas/auth.schemas";
@@ -37,17 +35,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Username verification states (only for signup)
-  const [usernameStatus, setUsernameStatus] = useState<{
-    checking: boolean;
-    available: boolean | null;
-    message: string;
-  }>({
-    checking: false,
-    available: null,
-    message: "",
-  });
-
   const navigate = useNavigate();
   const isSignup = type === "signup";
 
@@ -64,47 +51,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   });
 
   const password = watch("password");
-  const username = isSignup ? watch("username" as keyof SignupFormData) : "";
-
-  // Debounced username check (only for signup)
-  useEffect(() => {
-    if (!isSignup || !username || username.length < 3 || errors.username) {
-      setUsernameStatus({ checking: false, available: null, message: "" });
-      return;
-    }
-
-    const debounceTimer = setTimeout(async () => {
-      setUsernameStatus((prev) => ({ ...prev, checking: true }));
-
-      try {
-        const result = await authAPI.checkUsername(username);
-        setUsernameStatus({
-          checking: false,
-          available: result.available,
-          message: result.message,
-        });
-      } catch (error) {
-        setUsernameStatus({
-          checking: false,
-          available: false,
-          message: "Error checking username availability",
-        });
-      }
-    }, 500);
-
-    return () => clearTimeout(debounceTimer);
-  }, [username, errors.username, isSignup]);
 
   const onSubmit = async (data: SignupFormData | SigninFormData) => {
-    // Check username availability for signup
-    if (isSignup && usernameStatus.available === false) {
-      showErrorToast(
-        "Username not available",
-        "Please choose a different username"
-      );
-      return;
-    }
-
     setIsLoading(true);
 
     try {
@@ -151,11 +99,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   const passwordStrength = isSignup
     ? getPasswordStrength(password || "")
     : null;
-
-  // Determine if form is valid
-  const isFormValid = isSignup
-    ? isValid && usernameStatus.available === true
-    : isValid;
 
   // Configuration object for different auth types
   const config = {
@@ -229,30 +172,20 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     {...register("username" as keyof SignupFormData)}
                     type="text"
                     id="username"
-                    className={`w-full pl-10 pr-12 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
-                      errors.username || usernameStatus.available === false
+                    className={`w-full pl-10 pr-4 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
+                      errors.username
                         ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400"
-                        : usernameStatus.available === true
+                        : touchedFields.username && !errors.username
                         ? "border-green-500 dark:border-green-400 focus:border-green-500 dark:focus:border-green-400"
                         : "border-input focus:border-blue-500 dark:focus:border-blue-400"
                     }`}
                     placeholder="Enter your username"
                   />
-
-                  {/* Right side indicators */}
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                    {usernameStatus.checking && (
-                      <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />
-                    )}
-                    {!usernameStatus.checking &&
-                      usernameStatus.available === true && (
-                        <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400" />
-                      )}
-                    {!usernameStatus.checking &&
-                      usernameStatus.available === false && (
-                        <X className="h-5 w-5 text-red-500 dark:text-red-400" />
-                      )}
-                  </div>
+                  {touchedFields.username && !errors.username && (
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                      <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400" />
+                    </div>
+                  )}
                 </div>
 
                 {/* Error Messages */}
@@ -260,24 +193,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                   <p className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
                     <AlertCircle className="w-4 h-4 mr-1" />
                     {errors.username.message}
-                  </p>
-                )}
-
-                {/* Username availability message */}
-                {!errors.username && usernameStatus.message && (
-                  <p
-                    className={`mt-1 text-sm flex items-center ${
-                      usernameStatus.available
-                        ? "text-green-600 dark:text-green-400"
-                        : "text-red-500 dark:text-red-400"
-                    }`}
-                  >
-                    {usernameStatus.available ? (
-                      <CheckCircle className="w-4 h-4 mr-1" />
-                    ) : (
-                      <AlertCircle className="w-4 h-4 mr-1" />
-                    )}
-                    {usernameStatus.message}
                   </p>
                 )}
               </div>
@@ -454,11 +369,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={
-                !isFormValid ||
-                isLoading ||
-                (isSignup && usernameStatus.checking)
-              }
+              disabled={!isValid || isLoading}
               className="w-full btn-primary py-3 px-4 rounded-xl font-semibold text-white 
                        transition-all duration-300 hover:shadow-lg hover:scale-[1.02]
                        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100

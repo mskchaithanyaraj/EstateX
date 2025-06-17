@@ -14,7 +14,7 @@ createRoot(document.getElementById("root")!).render(
         <Toaster
           position="bottom-right"
           toastOptions={{
-            duration: 4000,
+            duration: 3000,
             className: "custom-toast",
             style: {
               background: "transparent",
@@ -23,10 +23,10 @@ createRoot(document.getElementById("root")!).render(
               margin: 0,
             },
             success: {
-              duration: 2000,
+              duration: 3000,
             },
             error: {
-              duration: 3000,
+              duration: 4000,
             },
           }}
         />
