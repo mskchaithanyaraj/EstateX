@@ -11,7 +11,6 @@ import {
   CheckCircle,
   AlertCircle,
   ArrowRight,
-  Home,
 } from "lucide-react";
 import { authAPI } from "../services/api";
 import { signupSchema, signinSchema } from "../schemas/auth.schemas";
@@ -136,19 +135,19 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         <div className="text-center mb-8">
           <Link
             to="/"
-            className="inline-flex items-center space-x-2 mb-6 group"
+            className="flex items-center justify-center space-x-3 group"
           >
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg group-hover:shadow-lg transition-all duration-300">
-              <Home className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold">
-              <span className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
+            <div
+              className="font-extrabold text-5xl flex items-center"
+              style={{ fontFamily: "Xtradex" }}
+            >
+              <span className="bg-gradient-to-r from-gray-900 via-gray-600 to-gray-800 dark:from-gray-100 dark:via-gray-300 dark:to-gray-200 bg-clip-text text-transparent p-1">
                 Estate
               </span>
-              <span className="text-orange-500 dark:text-orange-400 ml-1">
+              <span className="ml-1 text-amber-600 dark:text-amber-400 group-hover:text-amber-500 transition-colors duration-300">
                 X
               </span>
-            </span>
+            </div>
           </Link>
 
           <h1 className="text-3xl font-bold text-primary mb-2">
@@ -256,7 +255,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                 </div>
                 <input
                   {...register("password")}
-                  type={showPassword ? "text" : "password"}
+                  type={
+                    showPassword
+                      ? "text"
+                      : isSignup
+                      ? "new-password"
+                      : "current-password"
+                  }
                   id="password"
                   className={`w-full pl-10 pr-12 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
                     errors.password
@@ -326,7 +331,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                   </div>
                   <input
                     {...register("confirmPassword" as keyof SignupFormData)}
-                    type={showConfirmPassword ? "text" : "password"}
+                    type={showConfirmPassword ? "text" : "new-password"}
                     id="confirmPassword"
                     className={`w-full pl-10 pr-12 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
                       signupErrors.confirmPassword
