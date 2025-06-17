@@ -5,36 +5,39 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeProvider.tsx";
 import { Toaster } from "react-hot-toast";
-import { store } from "./redux/store.ts";
+import { persistor, store } from "./redux/store.ts";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <ThemeProvider>
-          <App />
-          <Toaster
-            position="bottom-right"
-            toastOptions={{
-              duration: 3000,
-              className: "custom-toast",
-              style: {
-                background: "transparent",
-                boxShadow: "none",
-                padding: 0,
-                margin: 0,
-              },
-              success: {
+      <PersistGate loading={null} persistor={persistor}>
+        <BrowserRouter>
+          <ThemeProvider>
+            <App />
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
                 duration: 3000,
-              },
-              error: {
-                duration: 6000,
-              },
-            }}
-          />
-        </ThemeProvider>
-      </BrowserRouter>
+                className: "custom-toast",
+                style: {
+                  background: "transparent",
+                  boxShadow: "none",
+                  padding: 0,
+                  margin: 0,
+                },
+                success: {
+                  duration: 3000,
+                },
+                error: {
+                  duration: 6000,
+                },
+              }}
+            />
+          </ThemeProvider>
+        </BrowserRouter>
+      </PersistGate>
     </Provider>
   </StrictMode>
 );
