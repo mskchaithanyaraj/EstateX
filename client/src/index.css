@@ -181,6 +181,11 @@
   }
 }
 
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
 /* Custom Utility Classes for Real Estate App */
 .bg-main {
   background-color: var(--color-background);

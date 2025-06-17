@@ -1,6 +1,7 @@
-import type { SignupData } from "../types/auth.types";
+import type { SignupData, SigninData, AuthResponse } from "../types/auth.types";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export const authAPI = {
   signup: async (data: SignupData) => {
@@ -16,6 +17,25 @@ export const authAPI = {
 
     if (!response.ok) {
       throw new Error(result.message || "Signup failed");
+    }
+
+    return result;
+  },
+
+  signin: async (data: SigninData): Promise<AuthResponse> => {
+    const response = await fetch(`${API_BASE_URL}/auth/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // Important for cookies
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Signin failed");
     }
 
     return result;

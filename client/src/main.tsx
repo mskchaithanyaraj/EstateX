@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
       <ThemeProvider>
         <App />
         <Toaster
-          position="top-right"
+          position="bottom-right"
           toastOptions={{
             duration: 4000,
             className: "custom-toast",
@@ -23,10 +23,10 @@ createRoot(document.getElementById("root")!).render(
               margin: 0,
             },
             success: {
-              duration: 5000,
+              duration: 2000,
             },
             error: {
-              duration: 6000,
+              duration: 3000,
             },
           }}
         />
