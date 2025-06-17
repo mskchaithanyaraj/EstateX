@@ -5,32 +5,36 @@ import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeProvider.tsx";
 import { Toaster } from "react-hot-toast";
+import { store } from "./redux/store.ts";
+import { Provider } from "react-redux";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <ThemeProvider>
-        <App />
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            duration: 3000,
-            className: "custom-toast",
-            style: {
-              background: "transparent",
-              boxShadow: "none",
-              padding: 0,
-              margin: 0,
-            },
-            success: {
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider>
+          <App />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
               duration: 3000,
-            },
-            error: {
-              duration: 4000,
-            },
-          }}
-        />
-      </ThemeProvider>
-    </BrowserRouter>
+              className: "custom-toast",
+              style: {
+                background: "transparent",
+                boxShadow: "none",
+                padding: 0,
+                margin: 0,
+              },
+              success: {
+                duration: 3000,
+              },
+              error: {
+                duration: 4000,
+              },
+            }}
+          />
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
   </StrictMode>
 );

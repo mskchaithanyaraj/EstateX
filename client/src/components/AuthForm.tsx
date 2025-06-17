@@ -186,7 +186,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     }`}
                     placeholder="Enter your username"
                   />
-                  {touchedFields.username && !errors.username && (
+                  {signupTouched.username && !signupErrors.username && (
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                       <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400" />
                     </div>
@@ -329,10 +329,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     type={showConfirmPassword ? "text" : "password"}
                     id="confirmPassword"
                     className={`w-full pl-10 pr-12 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
-                      errors.confirmPassword
+                      signupErrors.confirmPassword
                         ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400"
-                        : touchedFields.confirmPassword &&
-                          !errors.confirmPassword
+                        : signupTouched.confirmPassword &&
+                          !signupErrors.confirmPassword
                         ? "border-green-500 dark:border-green-400 focus:border-green-500 dark:focus:border-green-400"
                         : "border-input focus:border-blue-500 dark:focus:border-blue-400"
                     }`}
