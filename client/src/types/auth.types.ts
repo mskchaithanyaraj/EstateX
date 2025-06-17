@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { signupSchema, signinSchema } from "../schemas/auth.schemas";
+import type { User } from "firebase/auth";
 
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type SigninFormData = z.infer<typeof signinSchema>;
@@ -21,4 +22,25 @@ export interface AuthResponse {
   _id: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface GoogleAuthData {
+  name: string;
+  email: string;
+  image: string;
+}
+
+export interface AuthResult {
+  user: User;
+  providerId?: string;
+  operationType?: string;
+}
+
+export interface GoogleAuthResponse {
+  _id: string;
+  username: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+  profilePicture?: string;
 }

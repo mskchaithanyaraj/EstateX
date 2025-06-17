@@ -6,6 +6,7 @@ import SignIn from "./pages/SignIn";
 import Profile from "./pages/Profile";
 import Contact from "./pages/Contact";
 import Navbar from "./components/Navbar";
+import OAuthRedirectHandler from "./components/OAuthRedirectHandler";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/auth/callback" element={<OAuthRedirectHandler />} />
       </Routes>
     </>
   );

@@ -82,52 +82,52 @@
 
 /* Dark Mode Configuration - Applied when .dark class is present */
 .dark {
-  /* Dark Mode Background Colors */
-  --color-background: #0f172a;
-  --color-background-card: #1e293b;
-  --color-background-nav: #1e293b;
-  --color-background-section: #1e293b;
-  --color-background-input: #374151;
-  --color-background-overlay: rgba(0, 0, 0, 0.7);
+  /* Dark Mode Background Colors - Better contrast & readability */
+  --color-background: #0a0a0a;
+  --color-background-card: #171717;
+  --color-background-nav: #171717;
+  --color-background-section: #262626;
+  --color-background-input: #262626;
+  --color-background-overlay: rgba(0, 0, 0, 0.8);
 
-  /* Dark Mode Text Colors */
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #64748b;
-  --color-text-accent: #60a5fa;
-  --color-text-link: #60a5fa;
-  --color-text-price: #60a5fa;
-  --color-text-success: #10b981;
-  --color-text-error: #f87171;
-  --color-text-warning: #fbbf24;
+  /* Dark Mode Text Colors - Improved readability */
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a3a3a3;
+  --color-text-muted: #737373;
+  --color-text-accent: #f97316;
+  --color-text-link: #f97316;
+  --color-text-price: #22c55e;
+  --color-text-success: #22c55e;
+  --color-text-error: #ef4444;
+  --color-text-warning: #f59e0b;
 
-  /* Dark Mode Interactive States */
-  --color-button-bg: #3b82f6;
-  --color-button-text: #ffffff;
-  --color-button-hover: #2563eb;
-  --color-button-active: #1d4ed8;
-  --color-button-disabled: #64748b;
-  --color-button-disabled-text: #9ca3af;
+  /* Dark Mode Interactive States - Orange accent instead of blue */
+  --color-button-bg: #f97316;
+  --color-button-text: #fafafa;
+  --color-button-hover: #ea580c;
+  --color-button-active: #c2410c;
+  --color-button-disabled: #525252;
+  --color-button-disabled-text: #737373;
 
-  /* Dark Mode Borders & Focus */
-  --color-border: #374151;
-  --color-border-input: #4b5563;
-  --color-border-input-focus: #60a5fa;
-  --color-border-input-error: #f87171;
-  --color-focus-ring: #60a5fa;
+  /* Dark Mode Borders & Focus - Subtle grays */
+  --color-border: #404040;
+  --color-border-input: #525252;
+  --color-border-input-focus: #f97316;
+  --color-border-input-error: #ef4444;
+  --color-focus-ring: #f97316;
 
-  /* Dark Mode Charts */
-  --color-chart-primary: #34d399;
-  --color-chart-secondary: #fbbf24;
-  --color-chart-tertiary: #a78bfa;
-  --color-chart-neutral: #9ca3af;
-  --color-chart-background: rgba(30, 41, 59, 0.8);
+  /* Dark Mode Charts - Better color harmony */
+  --color-chart-primary: #22c55e;
+  --color-chart-secondary: #f59e0b;
+  --color-chart-tertiary: #a855f7;
+  --color-chart-neutral: #71717a;
+  --color-chart-background: rgba(23, 23, 23, 0.9);
 
   /* Dark Mode UI Elements */
-  --color-scrollbar-track: #1e293b;
-  --color-scrollbar-thumb: #64748b;
-  --color-scrollbar-thumb-hover: #94a3b8;
-  --color-toast-success: #064e3b;
+  --color-scrollbar-track: #262626;
+  --color-scrollbar-thumb: #525252;
+  --color-scrollbar-thumb-hover: #71717a;
+  --color-toast-success: #14532d;
   --color-toast-error: #7f1d1d;
   --color-toast-warning: #78350f;
 }
@@ -135,47 +135,47 @@
 /* System Dark Mode Support (fallback) */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    /* Same dark mode variables as above */
-    --color-background: #0f172a;
-    --color-background-card: #1e293b;
-    --color-background-nav: #1e293b;
-    --color-background-section: #1e293b;
-    --color-background-input: #374151;
-    --color-background-overlay: rgba(0, 0, 0, 0.7);
+    /* Same improved dark mode variables */
+    --color-background: #0a0a0a;
+    --color-background-card: #171717;
+    --color-background-nav: #171717;
+    --color-background-section: #262626;
+    --color-background-input: #262626;
+    --color-background-overlay: rgba(0, 0, 0, 0.8);
 
-    --color-text-primary: #f1f5f9;
-    --color-text-secondary: #cbd5e1;
-    --color-text-muted: #64748b;
-    --color-text-accent: #60a5fa;
-    --color-text-link: #60a5fa;
-    --color-text-price: #60a5fa;
-    --color-text-success: #10b981;
-    --color-text-error: #f87171;
-    --color-text-warning: #fbbf24;
+    --color-text-primary: #fafafa;
+    --color-text-secondary: #a3a3a3;
+    --color-text-muted: #737373;
+    --color-text-accent: #f97316;
+    --color-text-link: #f97316;
+    --color-text-price: #22c55e;
+    --color-text-success: #22c55e;
+    --color-text-error: #ef4444;
+    --color-text-warning: #f59e0b;
 
-    --color-button-bg: #3b82f6;
-    --color-button-text: #ffffff;
-    --color-button-hover: #2563eb;
-    --color-button-active: #1d4ed8;
-    --color-button-disabled: #64748b;
-    --color-button-disabled-text: #9ca3af;
+    --color-button-bg: #f97316;
+    --color-button-text: #fafafa;
+    --color-button-hover: #ea580c;
+    --color-button-active: #c2410c;
+    --color-button-disabled: #525252;
+    --color-button-disabled-text: #737373;
 
-    --color-border: #374151;
-    --color-border-input: #4b5563;
-    --color-border-input-focus: #60a5fa;
-    --color-border-input-error: #f87171;
-    --color-focus-ring: #60a5fa;
+    --color-border: #404040;
+    --color-border-input: #525252;
+    --color-border-input-focus: #f97316;
+    --color-border-input-error: #ef4444;
+    --color-focus-ring: #f97316;
 
-    --color-chart-primary: #34d399;
-    --color-chart-secondary: #fbbf24;
-    --color-chart-tertiary: #a78bfa;
-    --color-chart-neutral: #9ca3af;
-    --color-chart-background: rgba(30, 41, 59, 0.8);
+    --color-chart-primary: #22c55e;
+    --color-chart-secondary: #f59e0b;
+    --color-chart-tertiary: #a855f7;
+    --color-chart-neutral: #71717a;
+    --color-chart-background: rgba(23, 23, 23, 0.9);
 
-    --color-scrollbar-track: #1e293b;
-    --color-scrollbar-thumb: #64748b;
-    --color-scrollbar-thumb-hover: #94a3b8;
-    --color-toast-success: #064e3b;
+    --color-scrollbar-track: #262626;
+    --color-scrollbar-thumb: #525252;
+    --color-scrollbar-thumb-hover: #71717a;
+    --color-toast-success: #14532d;
     --color-toast-error: #7f1d1d;
     --color-toast-warning: #78350f;
   }
@@ -463,13 +463,19 @@ body::-webkit-scrollbar-thumb:hover {
   animation-fill-mode: forwards;
 }
 
-/* Enhanced form focus states */
+/* Enhanced form focus states - Replace existing */
 input:focus {
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }
 
 .dark input:focus {
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+}
+
+/* Better focus ring for dark mode */
+.dark .focus-ring {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
 }
 
 /* Custom Font Face */
