@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, type FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Eye,
   EyeOff,
@@ -22,6 +23,21 @@ import type {
 } from "../types/auth.types";
 import { showErrorToast, showSuccessToast } from "../utils/custom-toast";
 import { getPasswordStrength } from "../utils/utils";
+import {
+  // Sign In
+  signInStart,
+  signInSuccess,
+  signInFailure,
+  selectSignInLoading,
+  clearSignInError,
+  // Sign Up
+  signUpStart,
+  signUpSuccess,
+  signUpFailure,
+  selectSignUpLoading,
+  clearSignUpError,
+} from "../redux/user/userSlice";
+import { type AppDispatch } from "../redux/store";
 
 type AuthType = "signup" | "signin";
 
@@ -30,37 +46,56 @@ interface AuthFormProps {
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  // Redux selectors
+  const signInLoading = useSelector(selectSignInLoading);
+  const signUpLoading = useSelector(selectSignUpLoading);
+
+  // Local state
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const navigate = useNavigate();
   const isSignup = type === "signup";
 
-  // Form configuration based on type
+  // Determine which loading/error state to use
+  const isLoading = isSignup ? signUpLoading : signInLoading;
+  // Form configuration
   const schema = isSignup ? signupSchema : signinSchema;
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isValid, touchedFields },
+    reset,
   } = useForm<SignupFormData | SigninFormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
 
   const password = watch("password");
-
   const signupErrors = errors as FieldErrors<SignupFormData>;
   const signupTouched = touchedFields as Partial<
     Record<keyof SignupFormData, boolean>
   >;
 
-  const onSubmit = async (data: SignupFormData | SigninFormData) => {
-    setIsLoading(true);
+  // Clear errors when component mounts or type changes
+  useEffect(() => {
+    if (isSignup) {
+      dispatch(clearSignUpError());
+    } else {
+      dispatch(clearSignInError());
+    }
+    reset(); // Reset form when switching between signup/signin
+  }, [type, dispatch, reset, isSignup]);
 
+  // Handle form submission
+  const onSubmit = async (data: SignupFormData | SigninFormData) => {
     try {
       if (isSignup) {
+        dispatch(signUpStart());
+
         const signupData = data as SignupFormData;
         const payload: SignupData = {
           username: signupData.username,
@@ -69,12 +104,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         };
 
         await authAPI.signup(payload);
+        dispatch(signUpSuccess());
+
         showSuccessToast(
           "Account created successfully!",
           "Welcome to EstateX. Please sign in to continue."
         );
         navigate("/sign-in");
       } else {
+        dispatch(signInStart());
+
         const signinData = data as SigninFormData;
         const payload: SigninData = {
           email: signinData.email,
@@ -82,21 +121,39 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         };
 
         const response = await authAPI.signin(payload);
+
+        // Transform response to match User interface
+        const user = {
+          id: response._id,
+          username: response.username || "",
+          email: response.email,
+          createdAt: response.createdAt,
+          updatedAt: response.updatedAt,
+        };
+
+        dispatch(signInSuccess(user));
+
         showSuccessToast(
           "Welcome back!",
-          `Signed in successfully as ${response.username || response.email}`
+          `Signed in successfully as ${user.username || user.email}`
         );
-        navigate("/"); // Redirect to dashboard/home
+        navigate("/");
       }
     } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Something went wrong";
+
+      if (isSignup) {
+        dispatch(signUpFailure(errorMessage));
+      } else {
+        dispatch(signInFailure(errorMessage));
+      }
+
+      // Show toast notification for immediate feedback
       showErrorToast(
         isSignup ? "Signup failed" : "Signin failed",
-        error instanceof Error
-          ? error.message
-          : "Something went wrong. Please try again."
+        errorMessage
       );
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -129,7 +186,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   const currentConfig = config[type];
 
   return (
-    <div className="min-h-screen bg-main flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-main flex items-center justify-center px-4 py-8 scrollbar-custom">
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
@@ -173,9 +230,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     <User className="h-5 w-5 text-muted" />
                   </div>
                   <input
-                    {...register("username" as keyof SignupFormData)}
+                    {...register("username")}
                     type="text"
                     id="username"
+                    autoComplete="username"
                     className={`w-full pl-10 pr-4 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
                       signupErrors.username
                         ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400"
@@ -184,6 +242,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                         : "border-input focus:border-blue-500 dark:focus:border-blue-400"
                     }`}
                     placeholder="Enter your username"
+                    disabled={isLoading}
                   />
                   {signupTouched.username && !signupErrors.username && (
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -192,10 +251,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                   )}
                 </div>
 
-                {/* Error Messages */}
                 {signupErrors.username && (
                   <p className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
+                    <AlertCircle className="w-4 h-4 mr-1 flex-shrink-0" />
                     {signupErrors.username.message}
                   </p>
                 )}
@@ -218,6 +276,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                   {...register("email")}
                   type="email"
                   id="email"
+                  autoComplete="email"
                   className={`w-full pl-10 pr-4 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
                     errors.email
                       ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400"
@@ -226,6 +285,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                       : "border-input focus:border-blue-500 dark:focus:border-blue-400"
                   }`}
                   placeholder="Enter your email"
+                  disabled={isLoading}
                 />
                 {touchedFields.email && !errors.email && (
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
@@ -235,7 +295,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
               </div>
               {errors.email && (
                 <p className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                  <AlertCircle className="w-4 h-4 mr-1 flex-shrink-0" />
                   {errors.email.message}
                 </p>
               )}
@@ -255,14 +315,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                 </div>
                 <input
                   {...register("password")}
-                  type={
-                    showPassword
-                      ? "text"
-                      : isSignup
-                      ? "new-password"
-                      : "current-password"
-                  }
+                  type={showPassword ? "text" : "password"}
                   id="password"
+                  autoComplete={isSignup ? "new-password" : "current-password"}
                   className={`w-full pl-10 pr-12 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
                     errors.password
                       ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400"
@@ -275,11 +330,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                       ? "Create a strong password"
                       : "Enter your password"
                   }
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center disabled:opacity-50"
                   onClick={() => setShowPassword(!showPassword)}
+                  disabled={isLoading}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5 text-muted hover:text-primary transition-colors" />
@@ -301,7 +359,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                         }}
                       />
                     </div>
-                    <span className="text-xs font-medium text-muted">
+                    <span className="text-xs font-medium text-muted min-w-0">
                       {passwordStrength.label}
                     </span>
                   </div>
@@ -310,7 +368,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
 
               {errors.password && (
                 <p className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-1" />
+                  <AlertCircle className="w-4 h-4 mr-1 flex-shrink-0" />
                   {errors.password.message}
                 </p>
               )}
@@ -330,9 +388,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     <Lock className="h-5 w-5 text-muted" />
                   </div>
                   <input
-                    {...register("confirmPassword" as keyof SignupFormData)}
-                    type={showConfirmPassword ? "text" : "new-password"}
+                    {...register("confirmPassword")}
+                    type={showConfirmPassword ? "text" : "password"}
                     id="confirmPassword"
+                    autoComplete="new-password"
                     className={`w-full pl-10 pr-12 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
                       signupErrors.confirmPassword
                         ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400"
@@ -342,11 +401,18 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                         : "border-input focus:border-blue-500 dark:focus:border-blue-400"
                     }`}
                     placeholder="Confirm your password"
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center disabled:opacity-50"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={isLoading}
+                    aria-label={
+                      showConfirmPassword
+                        ? "Hide confirm password"
+                        : "Show confirm password"
+                    }
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-5 w-5 text-muted hover:text-primary transition-colors" />
@@ -355,9 +421,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     )}
                   </button>
                 </div>
-                {isSignup && signupErrors.confirmPassword && (
+                {signupErrors.confirmPassword && (
                   <p className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
+                    <AlertCircle className="w-4 h-4 mr-1 flex-shrink-0" />
                     {signupErrors.confirmPassword.message}
                   </p>
                 )}
