@@ -51,7 +51,7 @@ const SignUp: React.FC = () => {
 
       showSuccessToast(
         "Account created successfully!",
-        "Welcome to HELLO Estate. Please sign in to continue."
+        "Welcome to EstateX. Please sign in to continue."
       );
 
       navigate("/sign-in");
@@ -83,10 +83,10 @@ const SignUp: React.FC = () => {
             </div>
             <span className="text-2xl font-bold">
               <span className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-                HELLO
+                Estate
               </span>
               <span className="text-orange-500 dark:text-orange-400 ml-1">
-                Estate
+                X
               </span>
             </span>
           </Link>

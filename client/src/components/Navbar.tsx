@@ -8,19 +8,19 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-white dark:bg-slate-800 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 md:h-22">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg group-hover:shadow-lg transition-all duration-300">
-              <span className="text-white font-bold text-xl">H</span>
-            </div>
-            <div className="font-bold text-xl flex">
-              <span className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
-                HELLO
-              </span>
-              <span className="text-orange-500 dark:text-orange-400 ml-1">
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div
+              className="font-extrabold text-5xl flex items-center"
+              style={{ fontFamily: "Xtradex" }}
+            >
+              <span className="bg-gradient-to-r from-gray-900 via-gray-600 to-gray-800 dark:from-gray-100 dark:via-gray-300 dark:to-gray-200 bg-clip-text text-transparent p-1">
                 Estate
+              </span>
+              <span className="ml-1 text-amber-600 dark:text-amber-400 group-hover:text-amber-500 transition-colors duration-300">
+                X
               </span>
             </div>
           </Link>

@@ -341,3 +341,12 @@ input:focus {
 .dark input:focus {
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
 }
+
+/* Custom Font Face */
+@font-face {
+  font-family: "Xtradex";
+  src: url("/fonts/Xtradex.ttf") format("truetype"),
+    url("/fonts/Xtradex.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
