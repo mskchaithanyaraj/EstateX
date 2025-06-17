@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -51,6 +51,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   });
 
   const password = watch("password");
+
+  const signupErrors = errors as FieldErrors<SignupFormData>;
+  const signupTouched = touchedFields as Partial<
+    Record<keyof SignupFormData, boolean>
+  >;
 
   const onSubmit = async (data: SignupFormData | SigninFormData) => {
     setIsLoading(true);
@@ -173,9 +178,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     type="text"
                     id="username"
                     className={`w-full pl-10 pr-4 py-3 bg-input border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-primary placeholder-gray-500 dark:placeholder-gray-400 ${
-                      errors.username
+                      signupErrors.username
                         ? "border-red-500 dark:border-red-400 focus:border-red-500 dark:focus:border-red-400"
-                        : touchedFields.username && !errors.username
+                        : signupTouched.username && !signupErrors.username
                         ? "border-green-500 dark:border-green-400 focus:border-green-500 dark:focus:border-green-400"
                         : "border-input focus:border-blue-500 dark:focus:border-blue-400"
                     }`}
@@ -189,10 +194,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                 </div>
 
                 {/* Error Messages */}
-                {errors.username && (
+                {signupErrors.username && (
                   <p className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
                     <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.username.message}
+                    {signupErrors.username.message}
                   </p>
                 )}
               </div>
@@ -345,10 +350,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                     )}
                   </button>
                 </div>
-                {errors.confirmPassword && (
+                {isSignup && signupErrors.confirmPassword && (
                   <p className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
                     <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.confirmPassword.message}
+                    {signupErrors.confirmPassword.message}
                   </p>
                 )}
               </div>
