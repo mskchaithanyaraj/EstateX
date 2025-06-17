@@ -31,7 +31,6 @@ export const signin = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ email });
-    const { password: pass, ...userDetails } = user._doc; // Exclude password from user details
     if (!user) {
       return next(createError(404, "User not found, please sign up"));
     }
@@ -40,6 +39,8 @@ export const signin = async (req, res, next) => {
       return next(createError(401, "Invalid credentials"));
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const { password: pass, ...userDetails } = user._doc; // Exclude password from user details
+
     res
       .cookie("access_token", token, {
         httpOnly: true,

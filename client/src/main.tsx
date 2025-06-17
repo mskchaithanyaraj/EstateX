@@ -29,7 +29,7 @@ createRoot(document.getElementById("root")!).render(
                 duration: 3000,
               },
               error: {
-                duration: 4000,
+                duration: 6000,
               },
             }}
           />
