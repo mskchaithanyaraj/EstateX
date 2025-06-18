@@ -15,8 +15,6 @@ const Navbar = () => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const dispatch = useDispatch();
 
-  console.log("Current User:", currentUser);
-
   const handleSignOut = async () => {
     try {
       // Call API to clear server-side cookie
@@ -116,7 +114,7 @@ const Navbar = () => {
                  transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-orange-500/20"
                   >
                     <img
-                      src={currentUser.avatar || blankProfileImage}
+                      src={currentUser.avatar?.url || blankProfileImage}
                       alt={currentUser.username}
                       className="w-6 h-6 rounded-full object-cover"
                     />
@@ -277,7 +275,7 @@ const Navbar = () => {
                   <div className="flex items-center space-x-3 py-2">
                     <img
                       src={
-                        currentUser.avatar ||
+                        currentUser.avatar?.url ||
                         `https://ui-avatars.com/api/?name=${currentUser.username}&background=f97316&color=fff`
                       }
                       alt={currentUser.username}

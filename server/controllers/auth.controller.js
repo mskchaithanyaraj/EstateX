@@ -90,7 +90,7 @@ export const googleAuth = async (req, res, next) => {
         fullname: req.body.name,
         email: req.body.email,
         password: hashedPassword,
-        avatar: req.body.avatar,
+        avatar: { url: req.body.avatar, publicId: null },
       });
       const savedUser = await newUser.save();
       const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET, {

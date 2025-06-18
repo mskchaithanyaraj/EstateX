@@ -57,7 +57,7 @@ const OAuth: React.FC<OAuthProps> = ({ disabled = false, className = "" }) => {
         email: response.email,
         createdAt: response.createdAt,
         updatedAt: response.updatedAt,
-        avatar: response.avatar,
+        avatar: { url: response.avatar?.url, publicId: null },
         fullname: response.fullname, // Use fullname if available
       };
 

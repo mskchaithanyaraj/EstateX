@@ -1,9 +1,14 @@
+import type { User } from "../redux/user/userSlice";
 import type {
   SignupData,
   SigninData,
   AuthResponse,
   GoogleAuthData,
 } from "../types/auth.types";
+import type {
+  ChangePasswordData,
+  UpdateProfileData,
+} from "../types/profile.types";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL || "http://localhost:5000/api";
@@ -59,7 +64,9 @@ export const authAPI = {
     const result = await response.json();
 
     if (!response.ok) {
-      throw new Error(result.message || "Google authentication failed");
+      throw new Error(
+        result.message || `HTTP error! status: ${response.status}`
+      );
     }
 
     return result;
@@ -74,5 +81,65 @@ export const authAPI = {
       console.error("Sign out error:", error);
       // Still clear local state even if API call fails
     }
+  },
+};
+
+export const profileAPI = {
+  uploadAvatar: async (
+    file: File,
+    currentUser: User
+  ): Promise<{ avatarUrl: string }> => {
+    const form = new FormData();
+    form.append("avatar", file);
+    form.append("userId", currentUser.id);
+
+    const res = await fetch(`${API_BASE_URL}/user/avatar`, {
+      method: "PATCH",
+      credentials: "include",
+      body: form,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+    return data;
+  },
+
+  updateProfile: async (data: UpdateProfileData): Promise<AuthResponse> => {
+    const response = await fetch(`${API_BASE_URL}/user/profile`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to update profile");
+    }
+
+    return result;
+  },
+
+  changePassword: async (
+    data: ChangePasswordData
+  ): Promise<{ message: string }> => {
+    const response = await fetch(`${API_BASE_URL}/user/change-password`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to change password");
+    }
+
+    return result;
   },
 };

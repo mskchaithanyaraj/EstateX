@@ -24,7 +24,10 @@ export interface AuthResponse {
   email: string;
   createdAt: string;
   updatedAt: string;
-  avatar: string;
+  avatar: {
+    url: string;
+    publicId: string | null;
+  };
 }
 
 export interface GoogleAuthData {
