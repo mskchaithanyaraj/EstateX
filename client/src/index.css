@@ -78,6 +78,8 @@
   --color-warning-50: #fffbeb;
   --color-warning-500: #d97706;
   --color-warning-600: #c2410c;
+
+  --font-family-xtradex: "Xtradex", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Dark Mode Configuration - Applied when .dark class is present */
@@ -179,6 +181,10 @@
     --color-toast-error: #7f1d1d;
     --color-toast-warning: #78350f;
   }
+}
+
+.font-xtradex {
+  font-family: var(--font-family-xtradex);
 }
 
 body {

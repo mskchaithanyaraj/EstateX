@@ -1,8 +1,6 @@
-import React from "react";
-
 const Home = () => {
   return (
-    <div className="bg-amber-50 text-zinc-700 dark:bg-slate-700 dark:text-white">
+    <div className="font-xtradex flex items-center justify-center h-screen font-extrabold text-7xl">
       Home
     </div>
   );

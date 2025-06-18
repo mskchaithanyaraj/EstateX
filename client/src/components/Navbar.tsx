@@ -2,16 +2,43 @@ import { Link } from "react-router-dom";
 import ThemeToggler from "./ThemeToggler";
 import { Search, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { selectCurrentUser, signOut } from "../redux/user/userSlice";
+import { User, LogOut, Settings } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { authAPI } from "../services/api";
+import { blankProfileImage } from "../utils/cutom-icons";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { currentUser } = useSelector(selectCurrentUser);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  console.log("Current User:", currentUser);
+
+  const handleSignOut = async () => {
+    try {
+      // Call API to clear server-side cookie
+      await authAPI.signOut();
+    } catch (error) {
+      console.error("Sign out error:", error);
+    } finally {
+      // Always clear Redux state regardless of API result
+      dispatch(signOut());
+      setIsProfileDropdownOpen(false);
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-nav backdrop-blur-md border-b border-default shadow-lg">
       <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-22">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
+          <Link
+            to={currentUser ? "/" : "/overview"}
+            className="flex items-center space-x-3 group"
+          >
             <div
               className="font-extrabold text-5xl flex items-center"
               style={{ fontFamily: "Xtradex" }}
@@ -53,8 +80,9 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-6">
             <ul className="flex items-center space-x-6">
               {[
-                { to: "/", label: "Home" },
-                { to: "/about", label: "About" },
+                ...(currentUser
+                  ? [{ to: "/", label: "Home" }]
+                  : [{ to: "/overview", label: "Overview" }]),
                 { to: "/contact", label: "Contact" },
               ].map(({ to, label }) => (
                 <li key={to}>
@@ -73,23 +101,111 @@ const Navbar = () => {
               ))}
             </ul>
 
-            {/* Auth Buttons */}
-            <div className="flex items-center space-x-3">
-              <Link
-                to="/sign-in"
-                className="text-primary hover:text-accent 
-                         transition-colors duration-200 font-medium px-3 py-1.5"
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/sign-up"
-                className="btn-primary px-4 py-1.5 rounded-full font-medium 
-                         transition-all duration-300 hover:shadow-lg hover:scale-105"
-              >
-                Sign Up
-              </Link>
-            </div>
+            {/* Auth/Profile Section */}
+            {currentUser ? (
+              // Profile Section (when user is signed in)
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <button
+                    onClick={() =>
+                      setIsProfileDropdownOpen(!isProfileDropdownOpen)
+                    }
+                    className="flex items-center space-x-2 bg-section hover:bg-input
+                 text-primary border border-default 
+                 hover:border-input-focus rounded-full px-3 py-2 
+                 transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                  >
+                    <img
+                      src={currentUser.avatar || blankProfileImage}
+                      alt={currentUser.username}
+                      className="w-6 h-6 rounded-full object-cover"
+                    />
+                    <span className="text-sm font-medium truncate max-w-24">
+                      {currentUser.username}
+                    </span>
+                  </button>
+
+                  {/* Profile Dropdown */}
+                  {isProfileDropdownOpen && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                      />
+                      <div
+                        className="absolute right-0 mt-2 w-48 bg-card border border-default 
+                        rounded-xl shadow-lg z-20 overflow-hidden backdrop-blur-md"
+                      >
+                        <div className="px-4 py-3 border-b border-default">
+                          <p className="text-sm font-medium text-primary truncate">
+                            {currentUser.fullname || currentUser.username}
+                          </p>
+                          <p className="text-xs text-muted truncate">
+                            {currentUser.email}
+                          </p>
+                        </div>
+                        <div className="py-2">
+                          <Link
+                            to="/profile"
+                            className="flex items-center space-x-3 px-4 py-2 text-primary hover:bg-section
+                         transition-colors duration-200 group"
+                            onClick={() => setIsProfileDropdownOpen(false)}
+                          >
+                            <User
+                              size={16}
+                              className="text-muted group-hover:text-accent"
+                            />
+                            <span>Profile</span>
+                          </Link>
+                          <Link
+                            to="/settings"
+                            className="flex items-center space-x-3 px-4 py-2 text-primary hover:bg-section
+                         transition-colors duration-200 group"
+                            onClick={() => setIsProfileDropdownOpen(false)}
+                          >
+                            <Settings
+                              size={16}
+                              className="text-muted group-hover:text-accent"
+                            />
+                            <span>Settings</span>
+                          </Link>
+                          <hr className="border-default my-2" />
+                          <button
+                            onClick={handleSignOut}
+                            className="w-full flex items-center space-x-3 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20
+                         transition-colors duration-200 group"
+                          >
+                            <LogOut
+                              size={16}
+                              className="group-hover:scale-110 transition-transform duration-200"
+                            />
+                            <span>Sign Out</span>
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            ) : (
+              // Auth Buttons (when user is not signed in)
+              <div className="flex items-center space-x-3">
+                <Link
+                  to="/sign-in"
+                  className="text-primary hover:text-accent 
+               transition-colors duration-200 font-medium px-3 py-1.5"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/sign-up"
+                  className="btn-primary px-4 py-1.5 rounded-full font-medium 
+               transition-all duration-300 hover:shadow-lg hover:scale-105"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
 
             {/* Theme Toggler */}
             <ThemeToggler />
@@ -138,8 +254,9 @@ const Navbar = () => {
         <div className="md:hidden bg-nav border-t border-default shadow-lg">
           <div className="px-4 py-3 space-y-3">
             {[
-              { to: "/", label: "Home" },
-              { to: "/about", label: "About" },
+              ...(currentUser
+                ? [{ to: "/", label: "Home" }]
+                : [{ to: "/overview", label: "Overview" }]),
               { to: "/contact", label: "Contact" },
             ].map(({ to, label }) => (
               <Link
@@ -152,23 +269,75 @@ const Navbar = () => {
                 {label}
               </Link>
             ))}
+            {/* Mobile Auth/Profile Section */}
             <div className="pt-3 border-t border-default space-y-3">
-              <Link
-                to="/sign-in"
-                className="block text-primary hover:text-accent 
-                         transition-colors duration-200 font-medium py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Sign In
-              </Link>
-              <Link
-                to="/sign-up"
-                className="block btn-primary px-4 py-2 rounded-full font-medium text-center
-                         transition-all duration-300 hover:shadow-lg"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Sign Up
-              </Link>
+              {currentUser ? (
+                // Mobile Profile Section
+                <>
+                  <div className="flex items-center space-x-3 py-2">
+                    <img
+                      src={
+                        currentUser.avatar ||
+                        `https://ui-avatars.com/api/?name=${currentUser.username}&background=f97316&color=fff`
+                      }
+                      alt={currentUser.username}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <div>
+                      <p className="text-primary font-medium text-sm">
+                        {currentUser.fullname || currentUser.username}
+                      </p>
+                      <p className="text-muted text-xs">{currentUser.email}</p>
+                    </div>
+                  </div>
+                  <Link
+                    to="/profile"
+                    className="block text-primary hover:text-accent 
+                 transition-colors duration-200 font-medium py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className="block text-primary hover:text-accent 
+                 transition-colors duration-200 font-medium py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Settings
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleSignOut();
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full text-left text-red-600 dark:text-red-400
+                 transition-colors duration-200 font-medium py-2"
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                // Mobile Auth Buttons
+                <>
+                  <Link
+                    to="/sign-in"
+                    className="block text-primary hover:text-accent 
+                 transition-colors duration-200 font-medium py-2"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/sign-up"
+                    className="block btn-primary px-4 py-2 rounded-full font-medium text-center
+                 transition-all duration-300 hover:shadow-lg"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>

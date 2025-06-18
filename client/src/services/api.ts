@@ -3,7 +3,6 @@ import type {
   SigninData,
   AuthResponse,
   GoogleAuthData,
-  GoogleAuthResponse,
 } from "../types/auth.types";
 
 const API_BASE_URL =
@@ -47,7 +46,7 @@ export const authAPI = {
     return result;
   },
 
-  googleAuth: async (data: GoogleAuthData): Promise<GoogleAuthResponse> => {
+  googleAuth: async (data: GoogleAuthData): Promise<AuthResponse> => {
     const response = await fetch(`${API_BASE_URL}/auth/google`, {
       method: "POST",
       headers: {
@@ -64,5 +63,16 @@ export const authAPI = {
     }
 
     return result;
+  },
+  signOut: async (): Promise<void> => {
+    try {
+      await fetch(`${API_BASE_URL}/auth/signout`, {
+        method: "POST",
+        credentials: "include", // This will include the httpOnly cookie
+      });
+    } catch (error) {
+      console.error("Sign out error:", error);
+      // Still clear local state even if API call fails
+    }
   },
 };

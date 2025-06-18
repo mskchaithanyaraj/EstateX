@@ -36,6 +36,7 @@ import {
   signUpFailure,
   selectSignUpLoading,
   clearSignUpError,
+  resetAuthState,
 } from "../redux/user/userSlice";
 import { type AppDispatch } from "../redux/store";
 import OAuth from "./OAuth";
@@ -81,6 +82,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
     Record<keyof SignupFormData, boolean>
   >;
 
+  useEffect(() => {
+    // Reset auth state when form loads
+    dispatch(resetAuthState());
+  }, [dispatch]);
+
   // Clear errors when component mounts or type changes
   useEffect(() => {
     if (isSignup) {
@@ -99,6 +105,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
 
         const signupData = data as SignupFormData;
         const payload: SignupData = {
+          fullname: signupData.fullname,
           username: signupData.username,
           email: signupData.email,
           password: signupData.password,
@@ -126,17 +133,19 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         // Transform response to match User interface
         const user = {
           id: response._id,
-          username: response.username || "",
+          username: response.username,
           email: response.email,
           createdAt: response.createdAt,
           updatedAt: response.updatedAt,
+          fullname: response.fullname,
+          avatar: response.avatar, // Ensure avatar is always a string
         };
 
         dispatch(signInSuccess(user));
 
         showSuccessToast(
           "Welcome back!",
-          `Signed in successfully as ${user.username || user.email}`
+          `Signed in successfully as ${user.fullname}`
         );
         navigate("/");
       }
@@ -217,6 +226,47 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
         {/* Form Card */}
         <div className="bg-card rounded-2xl shadow-xl border border-default p-8 backdrop-blur-sm">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {isSignup && (
+              <div className="relative">
+                <label htmlFor="fullname" className="sr-only">
+                  Full Name
+                </label>
+                <input
+                  id="fullname"
+                  type="text"
+                  autoComplete="name"
+                  placeholder="Full Name"
+                  className={`w-full px-4 py-3 bg-input text-primary border rounded-xl
+                 focus:outline-none focus:border-input-focus focus:ring-2 focus:ring-orange-500/20
+                 transition-all duration-300 placeholder-gray-500 dark:placeholder-gray-400
+                 ${
+                   signupErrors.fullname ? "border-input-error" : "border-input"
+                 }`}
+                  {...register("fullname")}
+                />
+
+                {/* Validation Icons */}
+                {signupTouched.fullname && !signupErrors.fullname && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                )}
+
+                {signupErrors.fullname && (
+                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                    <AlertCircle className="h-5 w-5 text-red-500" />
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {signupErrors.fullname && (
+                  <p className="text-red-500 text-sm mt-1 flex items-center">
+                    <AlertCircle className="w-4 h-4 mr-1" />
+                    {signupErrors.fullname.message}
+                  </p>
+                )}
+              </div>
+            )}
             {/* Username Field - Only for Signup */}
             {isSignup && (
               <div>
@@ -260,7 +310,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                 )}
               </div>
             )}
-
             {/* Email Field */}
             <div>
               <label
@@ -301,7 +350,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                 </p>
               )}
             </div>
-
             {/* Password Field */}
             <div>
               <label
@@ -374,7 +422,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                 </p>
               )}
             </div>
-
             {/* Confirm Password Field - Only for Signup */}
             {isSignup && (
               <div>
@@ -430,7 +477,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                 )}
               </div>
             )}
-
             {/* Forgot Password Link - Only for Signin */}
             {!isSignup && (
               <div className="text-right">
@@ -442,7 +488,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
                 </Link>
               </div>
             )}
-
             {/* Submit Button */}
             <button
               type="submit"

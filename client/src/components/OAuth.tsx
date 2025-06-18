@@ -1,5 +1,5 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -9,6 +9,7 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
+  resetAuthState,
 } from "../redux/user/userSlice";
 import { showSuccessToast, showErrorToast } from "../utils/custom-toast";
 import { GoogleIcon } from "../utils/cutom-icons";
@@ -22,6 +23,11 @@ const OAuth: React.FC<OAuthProps> = ({ disabled = false, className = "" }) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Reset auth state when component mounts
+    dispatch(resetAuthState());
+  }, [dispatch]);
 
   const handleGoogleAuth = async () => {
     try {
@@ -52,10 +58,11 @@ const OAuth: React.FC<OAuthProps> = ({ disabled = false, className = "" }) => {
         createdAt: response.createdAt,
         updatedAt: response.updatedAt,
         avatar: response.avatar,
+        fullname: response.fullname, // Use fullname if available
       };
 
       dispatch(signInSuccess(user));
-      showSuccessToast("Welcome!", `Signed in as ${user.username}`);
+      showSuccessToast("Welcome!", `Signed in as ${user.fullname}`);
       navigate("/"); // Redirect to home after auth
     } catch (error) {
       console.error("❌ Google Auth error:", error);

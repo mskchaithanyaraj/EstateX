@@ -3,6 +3,7 @@ import type { RootState } from "../store";
 
 interface User {
   id: string;
+  fullname: string;
   username: string;
   email: string;
   createdAt: string;
@@ -86,6 +87,12 @@ const userSlice = createSlice({
       state.signin.error = null;
       state.signup.error = null;
     },
+    resetAuthState: (state) => {
+      state.signin.loading = false;
+      state.signin.error = null;
+      state.signup.loading = false;
+      state.signup.error = null;
+    },
   },
 });
 
@@ -103,12 +110,13 @@ export const {
   // General
   signOut,
   clearAllErrors,
+  resetAuthState,
 } = userSlice.actions;
 
 export default userSlice.reducer;
 
 // Selectors
-export const selectCurrentUser = (state: RootState) => state.user.currentUser;
+export const selectCurrentUser = (state: RootState) => state.user;
 export const selectIsAuthenticated = (state: RootState) =>
   !!state.user.currentUser;
 

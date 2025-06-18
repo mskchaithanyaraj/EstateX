@@ -5,13 +5,13 @@ import { capitalize, createError } from "../utils/error.util.js";
 import { generateUniqueUsername } from "../utils/helper.js";
 
 export const signup = async (req, res, next) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, fullname } = req.body;
   const hashedPassword = await bcrypt.hashSync(password, 10);
   const newUser = new User({
+    fullname,
     username,
     email,
     password: hashedPassword,
-    avatar: "https://www.gravatar.com/avatar/",
   });
 
   try {
@@ -40,7 +40,9 @@ export const signin = async (req, res, next) => {
     if (!isPasswordValid) {
       return next(createError(401, "Invalid credentials"));
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
     const { password: pass, ...userDetails } = user._doc; // Exclude password from user details
 
     res
@@ -61,7 +63,9 @@ export const googleAuth = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
       const { password, ...userDetails } = user._doc; // Exclude password from user details
 
       return res
@@ -79,16 +83,20 @@ export const googleAuth = async (req, res, next) => {
         Math.random().toString(36).slice(-8); // Generate a random password
 
       const hashedPassword = await bcrypt.hash(generatedPassword, 10);
+      const username = await generateUniqueUsername(req.body.name);
 
       const newUser = new User({
-        username: generateUniqueUsername(req.body.name),
+        username,
+        fullname: req.body.name,
         email: req.body.email,
         password: hashedPassword,
         avatar: req.body.avatar,
       });
-      newUser.save();
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
-      const { password, ...userDetails } = newUser._doc; // Exclude password from user details
+      const savedUser = await newUser.save();
+      const token = jwt.sign({ id: savedUser._id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      const { password, ...userDetails } = savedUser._doc; // Exclude password from user details
 
       return res
         .cookie("access_token", token, {
@@ -103,4 +111,11 @@ export const googleAuth = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+export const signout = (req, res) => {
+  res
+    .clearCookie("access_token")
+    .status(200)
+    .json({ message: "Signed out successfully" });
 };
