@@ -1,8 +1,11 @@
 const OverviewPage = () => {
   return (
-    <div className="font-xtradex flex items-center justify-center h-screen font-extrabold text-7xl">
-      <h1>Overview</h1>
-      <p>Sign in to continue using our app blah..blah..</p>
+    <div className="flex flex-col items-center justify-center h-screen ">
+      <h1 className="font-xtradex font-extrabold text-7xl">Overview</h1>
+      <p>
+        Sign in to continue using our app whcih has and is useful for ..
+        blah..blah..
+      </p>
     </div>
   );
 };

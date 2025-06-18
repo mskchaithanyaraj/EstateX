@@ -11,6 +11,7 @@ import OverviewPage from "./pages/OverviewPage";
 import PrivateRoutes from "./components/PrivateRoute";
 import { resetAuthState } from "./redux/user/userSlice";
 import NotFound from "./pages/NotFound";
+import TermsAndPrivacy from "./pages/TermsAndPrivacy";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/terms-and-privacy" element={<TermsAndPrivacy />} />
 
         {/* Private Routes */}
         <Route
