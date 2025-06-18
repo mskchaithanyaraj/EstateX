@@ -1,7 +1,16 @@
-import { getAuth, GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { app } from "../services/firebase";
+import { authAPI } from "../services/api";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
+import { showSuccessToast, showErrorToast } from "../utils/custom-toast";
 import { GoogleIcon } from "../utils/cutom-icons";
 
 interface OAuthProps {
@@ -11,26 +20,54 @@ interface OAuthProps {
 
 const OAuth: React.FC<OAuthProps> = ({ disabled = false, className = "" }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleGoogleAuth = async () => {
     try {
       setIsLoading(true);
+      dispatch(signInStart());
+
       const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
 
-      // Add custom parameters for better UX
       provider.setCustomParameters({
         prompt: "select_account",
       });
 
-      await signInWithRedirect(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+
+      const googleAuthData = {
+        name: result.user.displayName || "",
+        email: result.user.email || "",
+        avatar: result.user.photoURL || "",
+      };
+
+      const response = await authAPI.googleAuth(googleAuthData);
+
+      const user = {
+        id: response._id,
+        username: response.username,
+        email: response.email,
+        createdAt: response.createdAt,
+        updatedAt: response.updatedAt,
+        avatar: response.avatar,
+      };
+
+      dispatch(signInSuccess(user));
+      showSuccessToast("Welcome!", `Signed in as ${user.username}`);
+      navigate("/"); // Redirect to home after auth
     } catch (error) {
       console.error("❌ Google Auth error:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Authentication failed";
+      dispatch(signInFailure(errorMessage));
+      showErrorToast("Authentication Failed", errorMessage);
+    } finally {
       setIsLoading(false);
     }
   };
 
-  // Replace the OAuth button styles in OAuth.tsx
   return (
     <button
       type="button"

@@ -1,7 +1,8 @@
 import User from "../models/User.model.js";
 import bcrypt from "bcryptjs";
-import { capitalize, createError } from "../utils/error.util.js";
 import jwt from "jsonwebtoken";
+import { capitalize, createError } from "../utils/error.util.js";
+import { generateUniqueUsername } from "../utils/helper.js";
 
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -10,6 +11,7 @@ export const signup = async (req, res, next) => {
     username,
     email,
     password: hashedPassword,
+    avatar: "https://www.gravatar.com/avatar/",
   });
 
   try {
@@ -52,5 +54,53 @@ export const signin = async (req, res, next) => {
       .json(userDetails);
   } catch (error) {
     return next(error);
+  }
+};
+
+export const googleAuth = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const { password, ...userDetails } = user._doc; // Exclude password from user details
+
+      return res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        })
+        .status(200)
+        .json(userDetails);
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8); // Generate a random password
+
+      const hashedPassword = await bcrypt.hash(generatedPassword, 10);
+
+      const newUser = new User({
+        username: generateUniqueUsername(req.body.name),
+        email: req.body.email,
+        password: hashedPassword,
+        avatar: req.body.avatar,
+      });
+      newUser.save();
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const { password, ...userDetails } = newUser._doc; // Exclude password from user details
+
+      return res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        })
+        .status(200)
+        .json(userDetails);
+    }
+  } catch (error) {
+    next(error);
   }
 };

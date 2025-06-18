@@ -22,12 +22,13 @@ export interface AuthResponse {
   _id: string;
   createdAt: string;
   updatedAt: string;
+  avatar?: string;
 }
 
 export interface GoogleAuthData {
   name: string;
   email: string;
-  image: string;
+  avatar: string;
 }
 
 export interface AuthResult {
@@ -42,5 +43,5 @@ export interface GoogleAuthResponse {
   email: string;
   createdAt: string;
   updatedAt: string;
-  profilePicture?: string;
+  avatar: string;
 }

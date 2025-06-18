@@ -7,6 +7,7 @@ interface User {
   email: string;
   createdAt: string;
   updatedAt: string;
+  avatar: string;
 }
 
 interface UserState {
