@@ -1,1 +1,3 @@
-# MERN Stack real estate project
+# EstateX
+
+A MERN stack real estate project
