@@ -184,8 +184,8 @@ const Profile = () => {
 
     const file = e.target.files?.[0];
     if (file && currentUser) {
-      // Validate file size (5MB max)
-      if (file.size > 5 * 1024 * 1024) {
+      // Validate file size (2MB max)
+      if (file.size > 2 * 1024 * 1024) {
         const errorMsg = "Image size must be less than 5MB";
 
         showErrorToast("File Too Large", errorMsg);
