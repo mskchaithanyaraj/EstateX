@@ -14,8 +14,6 @@ import {
   EyeOff,
   Key,
   Trash2,
-  CheckCircle,
-  AlertCircle,
 } from "lucide-react";
 import { selectCurrentUser, signInSuccess } from "../redux/user/userSlice";
 import { profileAPI } from "../services/api";
@@ -23,6 +21,7 @@ import type {
   UpdateProfileData,
   ChangePasswordData,
 } from "../types/profile.types";
+import { showErrorToast, showSuccessToast } from "../utils/custom-toast";
 
 const Profile = () => {
   const { currentUser } = useSelector(selectCurrentUser);
@@ -33,8 +32,6 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const [showPassword, setShowPassword] = useState({
     current: false,
@@ -52,17 +49,6 @@ const Profile = () => {
     newPassword: "",
     confirmPassword: "",
   });
-
-  // Clear messages after 5 seconds
-  React.useEffect(() => {
-    if (successMessage || errorMessage) {
-      const timer = setTimeout(() => {
-        setSuccessMessage("");
-        setErrorMessage("");
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessage, errorMessage]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -82,9 +68,6 @@ const Profile = () => {
 
   const handleSaveProfile = async () => {
     setIsLoading(true);
-    setErrorMessage("");
-    setSuccessMessage("");
-
     try {
       const updateData: UpdateProfileData = {};
 
@@ -99,11 +82,10 @@ const Profile = () => {
       // Only make API call if there are changes
       if (Object.keys(updateData).length === 0) {
         setIsEditing(false);
-        setSuccessMessage("No changes to save");
+        showSuccessToast("No Changes", "No changes detected to save");
         return;
       }
 
-      console.log("Updating profile:", updateData);
       const response = await profileAPI.updateProfile(updateData);
 
       // Update Redux state with new data
@@ -119,31 +101,43 @@ const Profile = () => {
 
       dispatch(signInSuccess(updatedUser));
       setIsEditing(false);
-      setSuccessMessage("Profile updated successfully!");
+
+      // Show success toast
+      showSuccessToast(
+        "Profile Updated!",
+        "Your profile information has been updated successfully"
+      );
     } catch (error) {
       console.error("❌ Error updating profile:", error);
-      setErrorMessage(
-        error instanceof Error ? error.message : "Failed to update profile"
-      );
+      const errorMsg =
+        error instanceof Error ? error.message : "Failed to update profile";
+
+      // Show error toast
+      showErrorToast("Update Failed", errorMsg);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1700);
     }
   };
 
   const handleChangePassword = async () => {
+    // TODO: Hide for google users
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setErrorMessage("New passwords don't match!");
+      const errorMsg = "New passwords don't match!";
+
+      showErrorToast("Password Mismatch", errorMsg);
       return;
     }
 
     if (passwordData.newPassword.length < 8) {
-      setErrorMessage("New password must be at least 8 characters long!");
+      const errorMsg = "New password must be at least 8 characters long!";
+
+      showErrorToast("Password Too Short", errorMsg);
       return;
     }
 
     setPasswordLoading(true);
-    setErrorMessage("");
-    setSuccessMessage("");
 
     try {
       const changePasswordData: ChangePasswordData = {
@@ -151,47 +145,63 @@ const Profile = () => {
         newPassword: passwordData.newPassword,
       };
 
-      console.log("Changing password...");
-      const response = await profileAPI.changePassword(changePasswordData);
+      await profileAPI.changePassword(changePasswordData);
 
-      setSuccessMessage(response.message);
       setShowChangePassword(false);
       setPasswordData({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
+
+      // Show success toast
+      showSuccessToast(
+        "Password Changed!",
+        "Your password has been updated successfully"
+      );
     } catch (error) {
       console.error("❌ Error changing password:", error);
-      setErrorMessage(
-        error instanceof Error ? error.message : "Failed to change password"
-      );
+      const errorMsg =
+        error instanceof Error ? error.message : "Failed to change password";
+
+      // Show error toast
+      showErrorToast("Password Change Failed", errorMsg);
     } finally {
       setPasswordLoading(false);
     }
   };
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Prevent upload if not in edit mode
+    if (!isEditing) {
+      showErrorToast(
+        "Edit Mode Required",
+        "Please enable edit mode to change your avatar"
+      );
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (file && currentUser) {
       // Validate file size (5MB max)
       if (file.size > 5 * 1024 * 1024) {
-        setErrorMessage("Image size must be less than 5MB");
+        const errorMsg = "Image size must be less than 5MB";
+
+        showErrorToast("File Too Large", errorMsg);
         return;
       }
 
       // Validate file type
       if (!file.type.startsWith("image/")) {
-        setErrorMessage("Please select a valid image file");
+        const errorMsg = "Please select a valid image file";
+
+        showErrorToast("Invalid File Type", errorMsg);
         return;
       }
 
       setAvatarLoading(true);
-      setErrorMessage("");
-      setSuccessMessage("");
 
       try {
-        console.log("Uploading avatar...", file.name);
         const response = await profileAPI.uploadAvatar(file, currentUser);
 
         // Update Redux state
@@ -201,12 +211,18 @@ const Profile = () => {
         };
         dispatch(signInSuccess(updatedUser));
 
-        setSuccessMessage("Avatar updated successfully!");
+        // Show success toast
+        showSuccessToast(
+          "Avatar Updated!",
+          "Your profile picture has been updated successfully"
+        );
       } catch (error) {
         console.error("❌ Error uploading avatar:", error);
-        setErrorMessage(
-          error instanceof Error ? error.message : "Failed to upload avatar"
-        );
+        const errorMsg =
+          error instanceof Error ? error.message : "Failed to upload avatar";
+
+        // Show error toast
+        showErrorToast("Upload Failed", errorMsg);
       } finally {
         setAvatarLoading(false);
       }
@@ -219,7 +235,6 @@ const Profile = () => {
       username: currentUser?.username || "",
     });
     setIsEditing(false);
-    setErrorMessage("");
   };
 
   const formatDate = (dateString: string) => {
@@ -247,24 +262,6 @@ const Profile = () => {
           </p>
         </div>
 
-        {/* Success/Error Messages */}
-        {(successMessage || errorMessage) && (
-          <div
-            className={`mb-6 p-4 rounded-xl border flex items-center space-x-3 ${
-              successMessage
-                ? "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400"
-                : "bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400"
-            }`}
-          >
-            {successMessage ? (
-              <CheckCircle className="w-5 h-5 flex-shrink-0" />
-            ) : (
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            )}
-            <span className="text-sm">{successMessage || errorMessage}</span>
-          </div>
-        )}
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Profile Card */}
           <div className="lg:col-span-2 order-1">
@@ -286,17 +283,28 @@ const Profile = () => {
                         </div>
                       )}
                     </div>
-                    <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                      <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleAvatarChange}
-                        disabled={avatarLoading}
-                        className="hidden"
-                      />
-                    </label>
+
+                    {/* Hover overlay - only show when editing is enabled */}
+                    {isEditing && !avatarLoading && (
+                      <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                        <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleAvatarChange}
+                          disabled={avatarLoading || !isEditing}
+                          className="hidden"
+                        />
+                      </label>
+                    )}
+
+                    {/* Disabled overlay when not editing */}
+                    {!isEditing && (
+                      <div className="absolute inset-0 rounded-full cursor-not-allowed" />
+                    )}
                   </div>
+
+                  <span className="hidden md:block "></span>
 
                   {/* Basic Info */}
                   <div className="text-center sm:text-left">
@@ -330,7 +338,7 @@ const Profile = () => {
                   {isEditing ? (
                     <>
                       <X className="w-4 h-4" />
-                      <span>Cancel</span>
+                      <span>Cancel Edit</span>
                     </>
                   ) : (
                     <>

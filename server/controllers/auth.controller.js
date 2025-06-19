@@ -67,6 +67,10 @@ export const googleAuth = async (req, res, next) => {
         expiresIn: "7d",
       });
       const { password, ...userDetails } = user._doc; // Exclude password from user details
+      userDetails.avatar = {
+        url: req.body.avatar,
+        publicId: null,
+      }; // Ensure avatar is set from request
 
       return res
         .cookie("access_token", token, {

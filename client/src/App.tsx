@@ -12,6 +12,7 @@ import PrivateRoutes from "./components/PrivateRoute";
 import { resetAuthState } from "./redux/user/userSlice";
 import NotFound from "./pages/NotFound";
 import TermsAndPrivacy from "./pages/TermsAndPrivacy";
+import Settings from "./pages/Settings";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
               </Routes>
             </PrivateRoutes>
           }
