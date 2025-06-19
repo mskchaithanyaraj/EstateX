@@ -123,6 +123,7 @@ const Profile = () => {
 
   const handleChangePassword = async () => {
     // TODO: Hide for google users
+    // TODO: Add validation for current password ( min 8-10 characters, at least 1 uppercase, 1 lowercase, 1 number, 1 special character )
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       const errorMsg = "New passwords don't match!";
 
