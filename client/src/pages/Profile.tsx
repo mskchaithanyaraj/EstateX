@@ -475,7 +475,9 @@ const Profile = () => {
                     {/* Current Password */}
                     <div className="relative">
                       <input
-                        type={showPassword.current ? "text" : "password"}
+                        type={
+                          showPassword.current ? "text" : "current-password"
+                        }
                         name="currentPassword"
                         value={passwordData.currentPassword}
                         onChange={handlePasswordChange}
@@ -503,11 +505,11 @@ const Profile = () => {
                     {/* New Password */}
                     <div className="relative">
                       <input
-                        type={showPassword.new ? "text" : "password"}
+                        type={showPassword.new ? "text" : "new-password"}
                         name="newPassword"
                         value={passwordData.newPassword}
                         onChange={handlePasswordChange}
-                        placeholder="New Password (min 8 characters)"
+                        placeholder="New Password"
                         className="w-full pr-10 pl-4 py-2.5 sm:py-3 bg-input text-primary border border-input rounded-xl focus:outline-none focus:border-input-focus focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 text-sm sm:text-base"
                       />
                       <button
@@ -531,7 +533,7 @@ const Profile = () => {
                     {/* Confirm Password */}
                     <div className="relative">
                       <input
-                        type={showPassword.confirm ? "text" : "password"}
+                        type={showPassword.confirm ? "text" : "new-password"}
                         name="confirmPassword"
                         value={passwordData.confirmPassword}
                         onChange={handlePasswordChange}
