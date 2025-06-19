@@ -93,7 +93,7 @@ export const profileAPI = {
     form.append("avatar", file);
     form.append("userId", currentUser.id);
 
-    const res = await fetch(`${API_BASE_URL}/user/avatar`, {
+    const res = await fetch(`${API_BASE_URL}/user/${currentUser.id}/avatar`, {
       method: "PATCH",
       credentials: "include",
       body: form,
@@ -103,8 +103,11 @@ export const profileAPI = {
     return data;
   },
 
-  updateProfile: async (data: UpdateProfileData): Promise<AuthResponse> => {
-    const response = await fetch(`${API_BASE_URL}/user/profile`, {
+  updateProfile: async (
+    data: UpdateProfileData,
+    userId: string
+  ): Promise<AuthResponse> => {
+    const response = await fetch(`${API_BASE_URL}/user/${userId}/profile`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -123,16 +126,20 @@ export const profileAPI = {
   },
 
   changePassword: async (
-    data: ChangePasswordData
+    data: ChangePasswordData,
+    userId: string
   ): Promise<{ message: string }> => {
-    const response = await fetch(`${API_BASE_URL}/user/change-password`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/user/${userId}/change-password`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      }
+    );
 
     const result = await response.json();
 

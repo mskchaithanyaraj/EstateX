@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ThemeToggler from "./ThemeToggler";
 import { Search, Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -14,6 +14,7 @@ const Navbar = () => {
   const { currentUser } = useSelector(selectCurrentUser);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     try {
@@ -25,6 +26,7 @@ const Navbar = () => {
       // Always clear Redux state regardless of API result
       dispatch(signOut());
       setIsProfileDropdownOpen(false);
+      navigate("/sign-in", { replace: true });
     }
   };
 

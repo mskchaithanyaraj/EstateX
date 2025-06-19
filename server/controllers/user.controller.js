@@ -1,18 +1,8 @@
-import express from "express";
-import multer from "multer";
-import bcrypt from "bcryptjs";
 import cloudinary from "../utils/cloudinaryConfig.js"; // Fix path
-import User from "../models/User.model.js"; // Fix path
-import { verifyToken } from "../middleware/authMiddleware.js"; // Add auth middleware
+import User from "../models/User.model.js";
+import bcrypt from "bcryptjs";
 
-const upload = multer({ storage: multer.memoryStorage() });
-const profileRouter = express.Router();
-
-// Apply auth middleware to all routes
-profileRouter.use(verifyToken);
-
-// Avatar upload
-profileRouter.patch("/avatar", upload.single("avatar"), async (req, res) => {
+export const updateAvatar = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
 
@@ -49,10 +39,9 @@ profileRouter.patch("/avatar", upload.single("avatar"), async (req, res) => {
     console.error("Avatar upload error:", error);
     res.status(500).json({ message: "Failed to upload avatar" });
   }
-});
+};
 
-// Update profile (fullname and username only)
-profileRouter.patch("/profile", async (req, res) => {
+export const updateProfile = async (req, res) => {
   try {
     const { fullname, username } = req.body;
     const userId = req.user.id;
@@ -89,10 +78,9 @@ profileRouter.patch("/profile", async (req, res) => {
     console.error("Profile update error:", error);
     res.status(500).json({ message: "Failed to update profile" });
   }
-});
+};
 
-// Change password
-profileRouter.patch("/change-password", async (req, res) => {
+export const updatePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const userId = req.user.id;
@@ -135,6 +123,4 @@ profileRouter.patch("/change-password", async (req, res) => {
     console.error("Password change error:", error);
     res.status(500).json({ message: "Failed to change password" });
   }
-});
-
-export default profileRouter;
+};

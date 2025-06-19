@@ -86,7 +86,10 @@ const Profile = () => {
         return;
       }
 
-      const response = await profileAPI.updateProfile(updateData);
+      const response = await profileAPI.updateProfile(
+        updateData,
+        currentUser!.id
+      );
 
       // Update Redux state with new data
       const updatedUser = {
@@ -146,7 +149,7 @@ const Profile = () => {
         newPassword: passwordData.newPassword,
       };
 
-      await profileAPI.changePassword(changePasswordData);
+      await profileAPI.changePassword(changePasswordData, currentUser!.id);
 
       setShowChangePassword(false);
       setPasswordData({
@@ -271,15 +274,27 @@ const Profile = () => {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6 sm:mb-8 space-y-4 sm:space-y-0">
                 <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 lg:space-x-6">
                   {/* Avatar */}
+                  {/* Avatar */}
                   <div className="relative group mx-auto sm:mx-0">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-gradient-to-br from-orange-400 to-orange-600 p-1">
+                    <div
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden p-1"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, var(--color-text-accent), var(--color-button-bg))",
+                      }}
+                    >
                       <img
                         src={getAvatarUrl()}
                         alt={currentUser?.username}
-                        className="w-full h-full rounded-full object-cover bg-white"
+                        className="w-full h-full rounded-full object-cover bg-card"
                       />
                       {avatarLoading && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
+                        <div
+                          className="absolute inset-0 flex items-center justify-center rounded-full"
+                          style={{
+                            backgroundColor: "var(--color-background-overlay)",
+                          }}
+                        >
                           <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         </div>
                       )}
@@ -287,7 +302,12 @@ const Profile = () => {
 
                     {/* Hover overlay - only show when editing is enabled */}
                     {isEditing && !avatarLoading && (
-                      <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                      <label
+                        className="absolute inset-0 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        style={{
+                          backgroundColor: "var(--color-background-overlay)",
+                        }}
+                      >
                         <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         <input
                           type="file"
@@ -583,6 +603,7 @@ const Profile = () => {
             </div>
 
             {/* Settings Card */}
+            {/* TODO IMPORTANT - Add functionality for settings  */}
             <div className="bg-card rounded-2xl shadow-xl border border-default p-4 sm:p-6">
               <div className="flex items-center space-x-3 mb-4 sm:mb-6">
                 <Settings className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />

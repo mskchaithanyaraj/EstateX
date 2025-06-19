@@ -17,6 +17,18 @@ export const verifyToken = async (req, res, next) => {
       return next(createError(401, "User not found."));
     }
 
+    // Check if route has user ID parameter and validate it
+    if (req.params.id) {
+      if (req.params.id !== decoded.id) {
+        return next(
+          createError(
+            403,
+            "Access denied. You can only access your own resources."
+          )
+        );
+      }
+    }
+
     req.user = { id: user._id };
     next();
   } catch (error) {
