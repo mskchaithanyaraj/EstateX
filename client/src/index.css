@@ -84,51 +84,51 @@
 
 /* Dark Mode Configuration - Applied when .dark class is present */
 .dark {
-  /* Dark Mode Background Colors - Better contrast & readability */
-  --color-background: #0a0a0a;
-  --color-background-card: #171717;
-  --color-background-nav: #171717;
-  --color-background-section: #262626;
-  --color-background-input: #262626;
-  --color-background-overlay: rgba(0, 0, 0, 0.8);
+  /* Dark Mode Background Colors - Premium purple-black theme */
+  --color-background: #121212;
+  --color-background-card: #1f1b21;
+  --color-background-nav: #1f1b21;
+  --color-background-section: #282828;
+  --color-background-input: #343036;
+  --color-background-overlay: rgba(18, 18, 18, 0.9);
 
-  /* Dark Mode Text Colors - Improved readability */
-  --color-text-primary: #fafafa;
-  --color-text-secondary: #a3a3a3;
-  --color-text-muted: #737373;
-  --color-text-accent: #f97316;
-  --color-text-link: #f97316;
-  --color-text-price: #22c55e;
+  /* Dark Mode Text Colors - Purple accent theme */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #d6bfe5;
+  --color-text-muted: #939094;
+  --color-text-accent: #a172c4;
+  --color-text-link: #b690d1;
+  --color-text-price: #ccafdf;
   --color-text-success: #22c55e;
   --color-text-error: #ef4444;
   --color-text-warning: #f59e0b;
 
-  /* Dark Mode Interactive States - Orange accent instead of blue */
-  --color-button-bg: #f97316;
-  --color-button-text: #fafafa;
-  --color-button-hover: #ea580c;
-  --color-button-active: #c2410c;
-  --color-button-disabled: #525252;
-  --color-button-disabled-text: #737373;
+  /* Dark Mode Interactive States - Purple accent */
+  --color-button-bg: #a172c4;
+  --color-button-text: #ffffff;
+  --color-button-hover: #ac81cb;
+  --color-button-active: #b690d1;
+  --color-button-disabled: #575757;
+  --color-button-disabled-text: #8b8b8b;
 
-  /* Dark Mode Borders & Focus - Subtle grays */
-  --color-border: #404040;
-  --color-border-input: #525252;
-  --color-border-input-focus: #f97316;
+  /* Dark Mode Borders & Focus - Purple-toned greys */
+  --color-border: #4a464c;
+  --color-border-input: #615e63;
+  --color-border-input-focus: #a172c4;
   --color-border-input-error: #ef4444;
-  --color-focus-ring: #f97316;
+  --color-focus-ring: #b690d1;
 
-  /* Dark Mode Charts - Better color harmony */
-  --color-chart-primary: #22c55e;
-  --color-chart-secondary: #f59e0b;
-  --color-chart-tertiary: #a855f7;
-  --color-chart-neutral: #71717a;
-  --color-chart-background: rgba(23, 23, 23, 0.9);
+  /* Dark Mode Charts - Purple harmony */
+  --color-chart-primary: #a172c4;
+  --color-chart-secondary: #ccafdf;
+  --color-chart-tertiary: #d6bfe5;
+  --color-chart-neutral: #79777b;
+  --color-chart-background: rgba(31, 27, 33, 0.95);
 
-  /* Dark Mode UI Elements */
-  --color-scrollbar-track: #262626;
-  --color-scrollbar-thumb: #525252;
-  --color-scrollbar-thumb-hover: #71717a;
+  /* Dark Mode UI Elements - Tonal surfaces */
+  --color-scrollbar-track: #282828;
+  --color-scrollbar-thumb: #615e63;
+  --color-scrollbar-thumb-hover: #79777b;
   --color-toast-success: #14532d;
   --color-toast-error: #7f1d1d;
   --color-toast-warning: #78350f;
@@ -137,50 +137,61 @@
 /* System Dark Mode Support (fallback) */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    /* Same improved dark mode variables */
-    --color-background: #0a0a0a;
-    --color-background-card: #171717;
-    --color-background-nav: #171717;
-    --color-background-section: #262626;
-    --color-background-input: #262626;
-    --color-background-overlay: rgba(0, 0, 0, 0.8);
+    /* Same premium purple-black theme variables */
+    --color-background: #121212;
+    --color-background-card: #1f1b21;
+    --color-background-nav: #1f1b21;
+    --color-background-section: #282828;
+    --color-background-input: #343036;
+    --color-background-overlay: rgba(18, 18, 18, 0.9);
 
-    --color-text-primary: #fafafa;
-    --color-text-secondary: #a3a3a3;
-    --color-text-muted: #737373;
-    --color-text-accent: #f97316;
-    --color-text-link: #f97316;
-    --color-text-price: #22c55e;
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #d6bfe5;
+    --color-text-muted: #939094;
+    --color-text-accent: #a172c4;
+    --color-text-link: #b690d1;
+    --color-text-price: #ccafdf;
     --color-text-success: #22c55e;
     --color-text-error: #ef4444;
     --color-text-warning: #f59e0b;
 
-    --color-button-bg: #f97316;
-    --color-button-text: #fafafa;
-    --color-button-hover: #ea580c;
-    --color-button-active: #c2410c;
-    --color-button-disabled: #525252;
-    --color-button-disabled-text: #737373;
+    --color-button-bg: #a172c4;
+    --color-button-text: #ffffff;
+    --color-button-hover: #ac81cb;
+    --color-button-active: #b690d1;
+    --color-button-disabled: #575757;
+    --color-button-disabled-text: #8b8b8b;
 
-    --color-border: #404040;
-    --color-border-input: #525252;
-    --color-border-input-focus: #f97316;
+    --color-border: #4a464c;
+    --color-border-input: #615e63;
+    --color-border-input-focus: #a172c4;
     --color-border-input-error: #ef4444;
-    --color-focus-ring: #f97316;
+    --color-focus-ring: #b690d1;
 
-    --color-chart-primary: #22c55e;
-    --color-chart-secondary: #f59e0b;
-    --color-chart-tertiary: #a855f7;
-    --color-chart-neutral: #71717a;
-    --color-chart-background: rgba(23, 23, 23, 0.9);
+    --color-chart-primary: #a172c4;
+    --color-chart-secondary: #ccafdf;
+    --color-chart-tertiary: #d6bfe5;
+    --color-chart-neutral: #79777b;
+    --color-chart-background: rgba(31, 27, 33, 0.95);
 
-    --color-scrollbar-track: #262626;
-    --color-scrollbar-thumb: #525252;
-    --color-scrollbar-thumb-hover: #71717a;
+    --color-scrollbar-track: #282828;
+    --color-scrollbar-thumb: #615e63;
+    --color-scrollbar-thumb-hover: #79777b;
     --color-toast-success: #14532d;
     --color-toast-error: #7f1d1d;
     --color-toast-warning: #78350f;
   }
+}
+
+/* Enhanced form focus states - Update for purple theme */
+.dark input:focus {
+  box-shadow: 0 0 0 3px rgba(161, 114, 196, 0.2);
+}
+
+/* Better focus ring for dark mode */
+.dark .focus-ring {
+  outline: 2px solid #b690d1;
+  outline-offset: 2px;
 }
 
 .font-xtradex {
@@ -472,16 +483,6 @@ body::-webkit-scrollbar-thumb:hover {
 /* Enhanced form focus states - Replace existing */
 input:focus {
   box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
-}
-
-.dark input:focus {
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
-}
-
-/* Better focus ring for dark mode */
-.dark .focus-ring {
-  outline: 2px solid #f97316;
-  outline-offset: 2px;
 }
 
 /* Custom Font Face */
