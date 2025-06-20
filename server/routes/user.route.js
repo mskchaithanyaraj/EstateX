@@ -6,6 +6,7 @@ import {
   updateAvatar,
   updatePassword,
   updateProfile,
+  deleteUser,
 } from "../controllers/user.controller.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -22,5 +23,7 @@ userRouter.patch("/profile", updateProfile);
 
 // Change password
 userRouter.patch("/change-password", updatePassword);
+
+userRouter.delete("/delete", deleteUser);
 
 export default userRouter;

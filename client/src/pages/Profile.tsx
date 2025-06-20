@@ -15,23 +15,33 @@ import {
   Key,
   Trash2,
 } from "lucide-react";
-import { selectCurrentUser, signInSuccess } from "../redux/user/userSlice";
+import {
+  selectCurrentUser,
+  signInSuccess,
+  signOut,
+} from "../redux/user/userSlice";
 import { profileAPI } from "../services/api";
 import type {
   UpdateProfileData,
   ChangePasswordData,
 } from "../types/profile.types";
 import { showErrorToast, showSuccessToast } from "../utils/custom-toast";
+import WarningPopup from "../components/WarningPopup";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser } = useSelector(selectCurrentUser);
+  console.log("Current User:", currentUser);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
+  const [showDeleteWarning, setShowDeleteWarning] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const [showPassword, setShowPassword] = useState({
     current: false,
@@ -250,7 +260,39 @@ const Profile = () => {
   };
 
   const getAvatarUrl = () => {
+    if (!currentUser?.avatar) {
+      // TODO: REPLACE WITH CLOUDINARY URL
+      return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+    }
     return currentUser?.avatar?.url;
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleteLoading(true);
+    try {
+      await profileAPI.deleteUser(currentUser!.id);
+
+      // Clear user data from Redux
+      dispatch(signOut());
+
+      // Show success message
+      showSuccessToast(
+        "Account Deleted",
+        "Your account has been permanently deleted"
+      );
+
+      // Redirect to home page
+      navigate("/");
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      const errorMsg =
+        error instanceof Error ? error.message : "Failed to delete account";
+
+      showErrorToast("Deletion Failed", errorMsg);
+    } finally {
+      setDeleteLoading(false);
+      setShowDeleteWarning(false);
+    }
   };
 
   return (
@@ -623,12 +665,27 @@ const Profile = () => {
                   <span>Privacy Settings</span>
                 </button>
 
-                <button className="w-full flex items-center space-x-3 p-3 text-left bg-red-50 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl transition-all duration-200 text-red-600 dark:text-red-400 text-sm sm:text-base">
+                <button
+                  onClick={() => setShowDeleteWarning(true)}
+                  className="cursor-pointer w-full flex items-center space-x-3 p-3 text-left bg-red-50 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl transition-all duration-200 text-red-600 dark:text-red-400 text-sm sm:text-base"
+                >
                   <Trash2 className="w-4 h-4" />
                   <span>Delete Account</span>
                 </button>
               </div>
             </div>
+
+            {/* Warning Popup */}
+            <WarningPopup
+              isOpen={showDeleteWarning}
+              onClose={() => setShowDeleteWarning(false)}
+              onConfirm={handleDeleteAccount}
+              title="Delete Account"
+              message="Are you sure you want to permanently delete your account? This action cannot be undone. All your data, including profile information and saved listings, will be permanently removed."
+              confirmText="Delete Account"
+              cancelText="Keep Account"
+              isLoading={deleteLoading}
+            />
 
             {/* Stats Card */}
             <div className="bg-card rounded-2xl shadow-xl border border-default p-4 sm:p-6">

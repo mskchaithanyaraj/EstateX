@@ -28,7 +28,7 @@ createRoot(document.getElementById("root")!).render(
                   margin: 0,
                 },
                 success: {
-                  duration: 3000,
+                  duration: 4000,
                 },
                 error: {
                   duration: 6000,

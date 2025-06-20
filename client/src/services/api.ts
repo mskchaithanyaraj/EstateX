@@ -149,4 +149,18 @@ export const profileAPI = {
 
     return result;
   },
+  deleteUser: async (userId: string): Promise<{ message: string }> => {
+    const response = await fetch(`${API_BASE_URL}/user/${userId}/delete`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to delete user");
+    }
+
+    return result;
+  },
 };

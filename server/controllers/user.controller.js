@@ -1,6 +1,7 @@
 import cloudinary from "../utils/cloudinaryConfig.js"; // Fix path
 import User from "../models/User.model.js";
 import bcrypt from "bcryptjs";
+import { createError } from "../utils/error.util.js";
 
 export const updateAvatar = async (req, res) => {
   try {
@@ -122,5 +123,31 @@ export const updatePassword = async (req, res) => {
   } catch (error) {
     console.error("Password change error:", error);
     res.status(500).json({ message: "Failed to change password" });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete avatar from Cloudinary if it exists
+    if (user.avatar.publicId) {
+      await cloudinary.uploader.destroy(user.avatar.publicId, {
+        invalidate: true,
+      });
+    }
+
+    // Delete user from database
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("User deletion error:", error);
+    next(createError(500, "Failed to delete user"));
   }
 };

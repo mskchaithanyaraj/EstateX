@@ -8,6 +8,7 @@ import { User, LogOut, Settings } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { authAPI } from "../services/api";
 import { blankProfileImage } from "../utils/cutom-icons";
+import { showErrorToast, showSuccessToast } from "../utils/custom-toast";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,8 +21,17 @@ const Navbar = () => {
     try {
       // Call API to clear server-side cookie
       await authAPI.signOut();
+
+      showSuccessToast(
+        "Signed Out Successfully",
+        "You have been securely signed out"
+      );
     } catch (error) {
       console.error("Sign out error:", error);
+      showErrorToast(
+        "Sign Out Error",
+        "There was an issue signing out, but you've been logged out locally"
+      );
     } finally {
       // Always clear Redux state regardless of API result
       dispatch(signOut());
