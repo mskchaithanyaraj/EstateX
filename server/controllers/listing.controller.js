@@ -71,15 +71,34 @@ export const createListing = async (req, res, next) => {
       }
     }
 
+    // Create folder name based on userId and title
+    const sanitizedTitle = title
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "-") // Replace non-alphanumeric with hyphens
+      .replace(/-+/g, "-") // Replace multiple hyphens with single
+      .replace(/^-|-$/g, ""); // Remove leading/trailing hyphens
+
+    const folderPath = `listings/${userId}/${sanitizedTitle}`;
+
     // Handle image uploads
     let uploadedImages = [];
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map((file) => {
+      const uploadPromises = req.files.map((file, index) => {
         return new Promise((resolve, reject) => {
+          const timestamp = Date.now();
+          const filename = `${sanitizedTitle}-${timestamp}-${index}`;
+
           const stream = cloudinary.uploader.upload_stream(
             {
-              folder: "listings",
+              folder: folderPath,
+              public_id: filename,
               resource_type: "image",
+              transformation: [
+                { width: 1200, height: 800, crop: "limit" },
+                { quality: "auto" },
+                { format: "auto" },
+              ],
             },
             (error, result) => {
               if (error) reject(error);
@@ -103,12 +122,12 @@ export const createListing = async (req, res, next) => {
 
     // Create new listing
     const newListing = new Listing({
-      title,
-      description,
-      sellingPrice: type === "sale" ? sellingPrice : undefined,
-      rentalPrice: type === "rent" ? rentalPrice : undefined,
+      title: title.trim(),
+      description: description.trim(),
+      sellingPrice: type === "sale" ? Number(sellingPrice) : undefined,
+      rentalPrice: type === "rent" ? Number(rentalPrice) : undefined,
       discountedPrice: discountedPrice || 0,
-      location,
+      location: location.trim(),
       images: uploadedImages,
       userId,
       type,
@@ -123,6 +142,14 @@ export const createListing = async (req, res, next) => {
     });
   } catch (error) {
     console.error("Create listing error:", error);
+    // If it's a validation error from Mongoose
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return next(
+        createError(400, `Validation failed: ${messages.join(", ")}`)
+      );
+    }
+
     next(createError(500, "Failed to create listing"));
   }
 };

@@ -28,10 +28,10 @@ createRoot(document.getElementById("root")!).render(
                   margin: 0,
                 },
                 success: {
-                  duration: 4000,
+                  duration: 6000,
                 },
                 error: {
-                  duration: 6000,
+                  duration: 8000,
                 },
               }}
             />

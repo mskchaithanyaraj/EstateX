@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggler from "./ThemeToggler";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, X, Plus } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentUser, signOut } from "../redux/user/userSlice";
@@ -110,6 +110,18 @@ const Navbar = () => {
                 </li>
               ))}
             </ul>
+
+            {currentUser && (
+              <Link
+                to="/create-listing"
+                className="btn-primary px-4 py-2 rounded-full font-medium 
+                 transition-all duration-300 hover:shadow-lg hover:scale-105
+                 flex items-center space-x-2"
+              >
+                <Plus className="w-4 h-4" />
+                <span>List Property</span>
+              </Link>
+            )}
 
             {/* Auth/Profile Section */}
             {currentUser ? (
@@ -279,6 +291,19 @@ const Navbar = () => {
                 {label}
               </Link>
             ))}
+
+            {/* Mobile Create Listing Button */}
+            {currentUser && (
+              <Link
+                to="/create-listing"
+                className="btn-primary px-4 py-3 rounded-xl font-medium text-center
+                     transition-all duration-300 hover:shadow-lg flex items-center justify-center space-x-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Plus className="w-4 h-4" />
+                <span>List Your Property</span>
+              </Link>
+            )}
             {/* Mobile Auth/Profile Section */}
             <div className="pt-3 border-t border-default space-y-3">
               {currentUser ? (

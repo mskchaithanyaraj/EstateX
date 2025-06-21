@@ -13,6 +13,7 @@ import { resetAuthState } from "./redux/user/userSlice";
 import NotFound from "./pages/NotFound";
 import TermsAndPrivacy from "./pages/TermsAndPrivacy";
 import Settings from "./pages/Settings";
+import CreateListing from "./pages/CreateListing";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const App = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/create-listing" element={<CreateListing />} />
               </Routes>
             </PrivateRoutes>
           }
