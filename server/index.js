@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
+import listingRouter from "./routes/listing.route.js";
 dotenv.config();
 
 const app = express();
@@ -36,6 +37,7 @@ app.listen(process.env.PORT || 5000, () => {
 
 app.use("/api/user/:id", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/listing/:id", listingRouter);
 
 // Global error handler
 app.use((err, req, res, next) => {
