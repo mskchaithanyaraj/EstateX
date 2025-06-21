@@ -118,9 +118,13 @@ export const googleAuth = async (req, res, next) => {
   }
 };
 
-export const signout = (req, res) => {
-  res
-    .clearCookie("access_token")
-    .status(200)
-    .json({ message: "Signed out successfully" });
+export const signout = (req, res, next) => {
+  try {
+    res
+      .clearCookie("access_token")
+      .status(200)
+      .json({ message: "Signed out successfully" });
+  } catch (error) {
+    next(error);
+  }
 };

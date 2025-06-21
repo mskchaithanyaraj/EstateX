@@ -126,7 +126,7 @@ export const updatePassword = async (req, res) => {
   }
 };
 
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
   try {
     const userId = req.user.id;
 
