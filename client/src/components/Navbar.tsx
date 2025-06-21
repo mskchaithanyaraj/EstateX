@@ -133,7 +133,7 @@ const Navbar = () => {
                       setIsProfileDropdownOpen(!isProfileDropdownOpen)
                     }
                     className="flex items-center space-x-2 bg-section hover:bg-input
-                 text-primary border border-default 
+                 text-primary border border-default  cursor-pointer
                  hover:border-input-focus rounded-full px-3 py-2 
                  transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-orange-500/20"
                   >
@@ -195,7 +195,7 @@ const Navbar = () => {
                           <button
                             onClick={handleSignOut}
                             className="w-full flex items-center space-x-3 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20
-                         transition-colors duration-200 group"
+                         transition-colors duration-200 group cursor-pointer"
                           >
                             <LogOut
                               size={16}
@@ -215,7 +215,7 @@ const Navbar = () => {
                 <Link
                   to="/sign-in"
                   className="text-primary hover:text-accent 
-               transition-colors duration-200 font-medium px-3 py-1.5"
+               transition-colors duration-200 font-medium px-3 py-1.5 cursor-pointer"
                 >
                   Sign In
                 </Link>
