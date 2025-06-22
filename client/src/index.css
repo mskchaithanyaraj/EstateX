@@ -196,6 +196,7 @@
 
 .font-xtradex {
   font-family: var(--font-family-xtradex);
+  letter-spacing: 0.07em;
 }
 
 body {

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import ThemeToggler from "./ThemeToggler";
-import { Search, Menu, X, Plus } from "lucide-react";
+import { Search, Menu, X, Plus, Home } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentUser, signOut } from "../redux/user/userSlice";
@@ -93,6 +93,11 @@ const Navbar = () => {
                 ...(currentUser
                   ? [{ to: "/", label: "Home" }]
                   : [{ to: "/overview", label: "Overview" }]),
+
+                ...(currentUser
+                  ? [{ to: "/my-listings", label: "My Listings" }]
+                  : []),
+
                 { to: "/contact", label: "Contact" },
               ].map(({ to, label }) => (
                 <li key={to}>
@@ -291,7 +296,15 @@ const Navbar = () => {
                 {label}
               </Link>
             ))}
-
+            <Link
+              to="/my-listings"
+              className="flex items-center space-x-3 px-4 py-2 text-primary hover:bg-section
+             transition-colors duration-200 group"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Home size={16} className="text-muted group-hover:text-accent" />
+              <span>My Listings</span>
+            </Link>
             {/* Mobile Create Listing Button */}
             {currentUser && (
               <Link

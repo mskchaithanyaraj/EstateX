@@ -232,4 +232,86 @@ export const listingAPI = {
 
     return result;
   },
+  getListingById: async (listingId: string): Promise<Listing> => {
+    const response = await fetch(`${API_BASE_URL}/listing/${listingId}`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to fetch listing");
+    }
+
+    return result;
+  },
+
+  updateListing: async (
+    listingId: string,
+    data: CreateListingData
+  ): Promise<ListingResponse> => {
+    const formData = new FormData();
+
+    // Append text fields
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("location", data.location);
+    formData.append("type", data.type);
+    formData.append(
+      "houseSpecifications",
+      JSON.stringify(data.houseSpecifications)
+    );
+
+    if (data.sellingPrice) {
+      formData.append("sellingPrice", data.sellingPrice.toString());
+    }
+    if (data.rentalPrice) {
+      formData.append("rentalPrice", data.rentalPrice.toString());
+    }
+    if (data.discountedPrice) {
+      formData.append("discountedPrice", data.discountedPrice.toString());
+    }
+
+    // Append new images if any
+    if (data.images) {
+      data.images.forEach((image) => {
+        formData.append("images", image);
+      });
+    }
+
+    const response = await fetch(
+      `${API_BASE_URL}/listing/${listingId}/update`,
+      {
+        method: "PUT",
+        credentials: "include",
+        body: formData,
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to update listing");
+    }
+
+    return result;
+  },
+  deleteListing: async (listingId: string): Promise<{ message: string }> => {
+    const response = await fetch(
+      `${API_BASE_URL}/listing/${listingId}/delete`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to delete listing");
+    }
+
+    return result;
+  },
 };

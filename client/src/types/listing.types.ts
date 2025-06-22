@@ -1,3 +1,12 @@
+export interface ListingUser {
+  avatar?: {
+    url: string;
+    publicId: string;
+  };
+  _id: string;
+  username: string;
+  fullname: string;
+}
 export interface HouseSpecifications {
   type: "apartment" | "house" | "land" | "other";
   bedrooms: number;
@@ -19,7 +28,7 @@ export interface Listing {
   discountedPrice: number;
   location: string;
   images: ListingImage[];
-  userId: string;
+  user: ListingUser;
   type: "rent" | "sale";
   houseSpecifications: HouseSpecifications;
   createdAt: string;

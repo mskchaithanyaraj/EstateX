@@ -31,7 +31,7 @@ import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser } = useSelector(selectCurrentUser);
-  console.log("Current User:", currentUser);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

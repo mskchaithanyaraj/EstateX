@@ -14,6 +14,9 @@ import NotFound from "./pages/NotFound";
 import TermsAndPrivacy from "./pages/TermsAndPrivacy";
 import Settings from "./pages/Settings";
 import CreateListing from "./pages/CreateListing";
+import MyListings from "./pages/MyListings";
+import ListingDetail from "./pages/ListingDetail";
+import EditListing from "./pages/EditListing";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -44,6 +47,10 @@ const App = () => {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/create-listing" element={<CreateListing />} />
+
+                <Route path="/my-listings" element={<MyListings />} />
+                <Route path="/listings/:id" element={<ListingDetail />} />
+                <Route path="/listings/:id/edit" element={<EditListing />} />
               </Routes>
             </PrivateRoutes>
           }

@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Home,
   MapPin,
   Upload,
   X,
-  Plus,
+  Save,
   Bed,
   Bath,
   Square,
   IndianRupee,
+  ArrowLeft,
 } from "lucide-react";
 import {
   createListingSchema,
@@ -19,22 +20,27 @@ import {
 } from "../schemas/listing.schemas";
 import { listingAPI } from "../services/api";
 import { showErrorToast, showSuccessToast } from "../utils/custom-toast";
-import type { CreateListingData } from "../types/listing.types";
+import type {
+  CreateListingData,
+  Listing,
+  ListingImage,
+} from "../types/listing.types";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../redux/user/userSlice";
 import LoadingOverlay from "../components/LoadingOverlay";
 
-// TODO IMP : GIVE A BUTTON to GENERATE RANDOM DATA THROUGH FAKE API OR AI
-
-const CreateListing = () => {
+const EditListing = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState("Creating Listing..."); // Add this state
+  const [loadingMessage, setLoadingMessage] = useState("Updating Listing...");
   const [loadingSubmessage, setLoadingSubmessage] = useState(
-    "Please wait while we process your request"
+    "Please wait while we save your changes"
   );
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<ListingImage[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const { currentUser } = useSelector(selectCurrentUser);
 
   const {
@@ -42,18 +48,10 @@ const CreateListing = () => {
     unregister,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm<CreateListingFormData>({
     resolver: zodResolver(createListingSchema),
-    defaultValues: {
-      type: "rent",
-      houseSpecifications: {
-        type: "apartment",
-        bedrooms: 1,
-        bathrooms: 1,
-        area: 500,
-      },
-    },
   });
 
   const watchType = watch("type");
@@ -66,48 +64,82 @@ const CreateListing = () => {
     }
   }, [watchType, unregister]);
 
+  useEffect(() => {
+    if (id) {
+      const fetchListingData = async () => {
+        if (!id) return;
+
+        setIsLoadingData(true);
+        try {
+          const listing: Listing = await listingAPI.getListingById(id);
+
+          // Check if current user owns this listing
+          if (listing?.user._id !== currentUser?.id) {
+            showErrorToast(
+              "Access Denied",
+              "You can only edit your own listings"
+            );
+            navigate("/my-listings");
+            return;
+          }
+
+          // Populate form with existing data
+          reset({
+            title: listing.title,
+            description: listing.description,
+            location: listing.location,
+            type: listing.type,
+            sellingPrice: listing.sellingPrice,
+            rentalPrice: listing.rentalPrice,
+            discountedPrice: listing.discountedPrice,
+            houseSpecifications: listing.houseSpecifications,
+          });
+
+          // Set existing images
+          setExistingImages(listing.images || []);
+        } catch (error) {
+          console.error("Error fetching listing:", error);
+          showErrorToast("Error", "Failed to load listing data");
+          navigate("/my-listings");
+        } finally {
+          setIsLoadingData(false);
+        }
+      };
+      fetchListingData();
+    }
+  }, [id, currentUser, navigate, reset]);
+
   const simulateLoadingMessages = () => {
     const loadingSequence = [
       {
-        message: "Getting Your Listing Ready...",
-        submessage: "We’re setting things in motion to showcase your property",
+        message: "Updating Listing...",
+        submessage: "Please wait while we save your changes",
       },
       {
-        message: "Reviewing Your Details...",
-        submessage: "Double-checking location, pricing, and key info",
+        message: "Processing Updates...",
+        submessage: "Validating your information",
       },
       {
-        message: "Uploading Property Photos...",
-        submessage:
-          "Enhancing and storing your images for the best presentation",
+        message: "Uploading New Images...",
+        submessage: "Adding any new photos",
       },
-      {
-        message: "Organizing Your Listing Assets...",
-        submessage: "Placing documents and media where they belong",
-      },
-      {
-        message: "Final Touches in Progress...",
-        submessage: "Polishing your listing before it goes live",
-      },
-      {
-        message: "Publishing Your Property...",
-        submessage:
-          "Making your listing visible to potential buyers and renters",
-      },
+      { message: "Finalizing Changes...", submessage: "Almost done!" },
     ];
 
     loadingSequence.forEach((step, index) => {
       setTimeout(() => {
         setLoadingMessage(step.message);
         setLoadingSubmessage(step.submessage);
-      }, index * 1200);
+      }, index * 1500);
     });
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    const totalImages =
+      existingImages.length + selectedImages.length + files.length;
 
-    if (files.length + selectedImages.length > 4) {
+    if (totalImages > 4) {
       showErrorToast("Too Many Images", "Maximum 4 images allowed");
       return;
     }
@@ -133,48 +165,54 @@ const CreateListing = () => {
     setSelectedImages((prev) => [...prev, ...files]);
   };
 
-  const removeImage = (index: number) => {
+  const removeNewImage = (index: number) => {
     setSelectedImages((prev) => prev.filter((_, i) => i !== index));
     setImagePreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const removeExistingImage = (index: number) => {
+    setExistingImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const onSubmit = async (data: CreateListingFormData) => {
+    if (!id) return;
+
     setIsLoading(true);
-    simulateLoadingMessages(); // Start the loading message sequence
+    simulateLoadingMessages();
 
     try {
       const listingData: CreateListingData = {
         ...data,
-        images: selectedImages,
+        images: selectedImages, // Only send new images
       };
 
-      const res = await listingAPI.createListing(
-        listingData,
-        currentUser?.id || ""
-      );
-
+      await listingAPI.updateListing(id, listingData);
       showSuccessToast(
-        "Listing Created!",
-        "Your property listing has been created successfully"
+        "Listing Updated!",
+        "Your property listing has been updated successfully"
       );
 
-      navigate(`/listings/${res.listing._id}`);
+      navigate(`/listings/${id}`);
     } catch (error) {
-      console.error("Error creating listing:", error);
+      console.error("Error updating listing:", error);
       const errorMsg =
-        error instanceof Error ? error.message : "Failed to create listing";
-      showErrorToast("Creation Failed", errorMsg);
+        error instanceof Error ? error.message : "Failed to update listing";
+      showErrorToast("Update Failed", errorMsg);
     } finally {
       setIsLoading(false);
-      // Reset loading messages
-      setLoadingMessage("Creating Listing...");
-      setLoadingSubmessage("Please wait while we process your request");
+      setLoadingMessage("Updating Listing...");
+      setLoadingSubmessage("Please wait while we save your changes");
     }
   };
 
+  if (isLoadingData) {
+    return (
+      <LoadingOverlay isVisible={true} message="Loading listing data..." />
+    );
+  }
+
   return (
     <>
-      {/* Add the loading overlay */}
       <LoadingOverlay
         isVisible={isLoading}
         message={loadingMessage}
@@ -184,18 +222,29 @@ const CreateListing = () => {
       <div className="min-h-screen bg-main py-8 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="font-xtradex text-3xl lg:text-4xl font-bold text-primary mb-2">
-              Create New Listing
-            </h1>
-            <p className="text-muted">
-              Add your property to EstateX marketplace
-            </p>
+          <div className="mb-8">
+            <div className="flex flex-col  space-x-4">
+              <button
+                onClick={() => navigate("/my-listings")}
+                className="flex items-center space-x-2 text-primary hover:text-accent transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span>Back</span>
+              </button>
+              <div className="min-w-full">
+                <h1 className="font-xtradex text-3xl lg:text-4xl font-bold text-primary text-center tracking-widest">
+                  Edit Listing
+                </h1>
+                <p className="text-muted text-center">
+                  Update your property information
+                </p>
+              </div>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Left Column */}
+              {/* Left Column - Same as CreateListing but with populated data */}
               <div className="space-y-6">
                 {/* Basic Information */}
                 <div className="bg-card rounded-2xl shadow-xl border border-default p-6">
@@ -321,7 +370,7 @@ const CreateListing = () => {
                   </div>
                 </div>
 
-                {/* House Specifications */}
+                {/* House Specifications - Same as CreateListing */}
                 <div className="bg-card rounded-2xl shadow-xl border border-default p-6">
                   <h3 className="text-lg font-semibold text-primary mb-4 flex items-center">
                     <Square className="w-5 h-5 mr-2 text-accent" />
@@ -380,7 +429,7 @@ const CreateListing = () => {
                           })}
                           type="number"
                           min="0"
-                          step="1"
+                          step="0.5"
                           className="w-full px-3 py-2 bg-input border border-input rounded-xl focus:outline-none focus:border-input-focus text-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         />
                       </div>
@@ -510,7 +559,34 @@ const CreateListing = () => {
                   </h3>
 
                   <div className="space-y-4">
-                    {/* Upload Area */}
+                    {/* Existing Images */}
+                    {existingImages.length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-medium text-primary mb-2">
+                          Current Images
+                        </h4>
+                        <div className="grid grid-cols-2 gap-4">
+                          {existingImages.map((image, index) => (
+                            <div key={image.publicId} className="relative">
+                              <img
+                                src={image.url}
+                                alt={`Existing ${index + 1}`}
+                                className="w-full h-24 object-cover rounded-lg"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeExistingImage(index)}
+                                className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Upload New Images */}
                     <div className="border-2 border-dashed border-input rounded-xl p-6 text-center">
                       <input
                         type="file"
@@ -522,34 +598,37 @@ const CreateListing = () => {
                       />
                       <label htmlFor="image-upload" className="cursor-pointer">
                         <Upload className="w-8 h-8 mx-auto mb-2 text-muted" />
-                        <p className="text-primary mb-1">
-                          Click to upload images
-                        </p>
+                        <p className="text-primary mb-1">Add new images</p>
                         <p className="text-sm text-muted">
-                          Maximum 4 images, 5MB each
+                          Maximum 4 images total, 5MB each
                         </p>
                       </label>
                     </div>
 
-                    {/* Image Previews */}
+                    {/* New Image Previews */}
                     {imagePreviews.length > 0 && (
-                      <div className="grid grid-cols-2 gap-4">
-                        {imagePreviews.map((preview, index) => (
-                          <div key={index} className="relative">
-                            <img
-                              src={preview}
-                              alt={`Preview ${index + 1}`}
-                              className="w-full h-24 object-cover rounded-lg"
-                            />
-                            <button
-                              type="button"
-                              onClick={() => removeImage(index)}
-                              className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          </div>
-                        ))}
+                      <div>
+                        <h4 className="text-sm font-medium text-primary mb-2">
+                          New Images
+                        </h4>
+                        <div className="grid grid-cols-2 gap-4">
+                          {imagePreviews.map((preview, index) => (
+                            <div key={index} className="relative">
+                              <img
+                                src={preview}
+                                alt={`New ${index + 1}`}
+                                className="w-full h-24 object-cover rounded-lg"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeNewImage(index)}
+                                className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -562,17 +641,17 @@ const CreateListing = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="btn-primary px-8 py-3 rounded-xl font-medium transition-all duration-300 hover:shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                className="btn-primary px-8 py-3 rounded-xl font-medium transition-all duration-300 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
               >
                 {isLoading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Creating Listing...</span>
+                    <span>Updating...</span>
                   </>
                 ) : (
                   <>
-                    <Plus className="w-5 h-5" />
-                    <span>Create Listing</span>
+                    <Save className="w-5 h-5" />
+                    <span>Update Listing</span>
                   </>
                 )}
               </button>
@@ -584,4 +663,4 @@ const CreateListing = () => {
   );
 };
 
-export default CreateListing;
+export default EditListing;

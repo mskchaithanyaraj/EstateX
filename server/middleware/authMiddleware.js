@@ -18,8 +18,8 @@ export const verifyToken = async (req, res, next) => {
     }
 
     // Check if route has user ID parameter and validate it
-    if (req.params.id) {
-      if (req.params.id !== decoded.id) {
+    if (req.params.userId) {
+      if (req.params.userId !== decoded.id) {
         return next(
           createError(
             403,
