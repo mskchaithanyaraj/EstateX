@@ -7,6 +7,7 @@ import {
   updatePassword,
   updateProfile,
   deleteUser,
+  getUserListings,
 } from "../controllers/user.controller.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -25,5 +26,7 @@ userRouter.patch("/profile", updateProfile);
 userRouter.patch("/change-password", updatePassword);
 
 userRouter.delete("/delete", deleteUser);
+
+userRouter.get("/listings", getUserListings);
 
 export default userRouter;

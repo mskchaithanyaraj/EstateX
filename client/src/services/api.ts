@@ -7,6 +7,7 @@ import type {
 } from "../types/auth.types";
 import type {
   CreateListingData,
+  Listing,
   ListingResponse,
 } from "../types/listing.types";
 import type {
@@ -213,6 +214,20 @@ export const listingAPI = {
 
     if (!response.ok) {
       throw new Error(result.message || "Failed to create listing");
+    }
+
+    return result;
+  },
+  getListings: async (userId: string): Promise<Listing[]> => {
+    const response = await fetch(`${API_BASE_URL}/user/${userId}/listings`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to fetch listings");
     }
 
     return result;

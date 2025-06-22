@@ -2,6 +2,7 @@ import cloudinary from "../utils/cloudinaryConfig.js"; // Fix path
 import User from "../models/User.model.js";
 import bcrypt from "bcryptjs";
 import { createError } from "../utils/error.util.js";
+import Listing from "../models/Listing.model.js";
 
 export const updateAvatar = async (req, res) => {
   try {
@@ -149,5 +150,27 @@ export const deleteUser = async (req, res, next) => {
   } catch (error) {
     console.error("User deletion error:", error);
     next(createError(500, "Failed to delete user"));
+  }
+};
+
+export const getUserListings = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Fetch listings created by the user
+    const listings = await Listing.find({ userId })
+      .populate("userId", "fullname username avatar")
+      .sort({ createdAt: -1 });
+
+    if (!listings || listings.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No listings found for this user" });
+    }
+
+    res.json(listings);
+  } catch (error) {
+    console.error("Error fetching user listings:", error);
+    res.status(500).json({ message: "Failed to fetch user listings" });
   }
 };
