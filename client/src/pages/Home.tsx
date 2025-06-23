@@ -8,13 +8,10 @@ import {
   Square,
   Calendar,
   Heart,
-  TrendingUp,
-  Filter,
   SlidersHorizontal,
   Grid3x3,
   List,
   ChevronRight,
-  Star,
   ArrowRight,
 } from "lucide-react";
 import { listingAPI } from "../services/api";
@@ -33,22 +30,21 @@ const Home = () => {
   >("date-desc");
 
   useEffect(() => {
+    const fetchAllListings = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch all listings with just sorting
+        const allListings = await listingAPI.searchListings({ sortBy });
+        setListings(allListings);
+      } catch (error) {
+        console.error("Error fetching listings:", error);
+        showErrorToast("Error", "Failed to fetch listings");
+      } finally {
+        setIsLoading(false);
+      }
+    };
     fetchAllListings();
   }, [sortBy]);
-
-  const fetchAllListings = async () => {
-    setIsLoading(true);
-    try {
-      // Fetch all listings with just sorting
-      const allListings = await listingAPI.searchListings({ sortBy });
-      setListings(allListings);
-    } catch (error) {
-      console.error("Error fetching listings:", error);
-      showErrorToast("Error", "Failed to fetch listings");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,10 +100,7 @@ const Home = () => {
       <section className="bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-16">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h1
-              className="font-extrabold text-4xl md:text-6xl mb-6"
-              style={{ fontFamily: "Xtradex" }}
-            >
+            <h1 className="font-extrabold font-xtradex text-4xl md:text-6xl mb-6">
               <span className="bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 bg-clip-text text-transparent">
                 Discover
               </span>
@@ -121,7 +114,10 @@ const Home = () => {
 
           {/* Enhanced Search Bar */}
           <div className="max-w-4xl mx-auto mb-8">
-            <form onSubmit={handleSearch} className="relative group">
+            <form
+              onSubmit={handleSearch}
+              className="relative group search-enhanced"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition-opacity duration-300" />
               <div className="relative bg-card rounded-2xl shadow-2xl border border-default">
                 <div className="flex items-center p-2">
@@ -131,7 +127,7 @@ const Home = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by location, property type, or area..."
-                    className="flex-1 px-4 py-4 bg-transparent text-primary placeholder-muted focus:outline-none text-lg"
+                    className="flex-1 px-4 py-4 bg-transparent text-primary placeholder-muted focus:outline-none text-lg border-none"
                   />
                   <button
                     type="submit"

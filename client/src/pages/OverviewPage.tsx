@@ -208,7 +208,10 @@ const Overview = () => {
 
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto mb-12">
-            <form onSubmit={handleSearch} className="relative group">
+            <form
+              onSubmit={handleSearch}
+              className="relative group hero-search"
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition-opacity duration-300" />
               <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-orange-200 dark:border-gray-700">
                 <div className="flex items-center p-2">
@@ -218,7 +221,7 @@ const Overview = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by location, property type, or price..."
-                    className="flex-1 px-4 py-4 bg-transparent text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none text-lg"
+                    className="flex-1 px-4 py-4 bg-transparent text-gray-800 dark:text-white placeholder-gray-500 focus:outline-none text-lg border-none"
                   />
                   <button
                     type="submit"
@@ -231,7 +234,6 @@ const Overview = () => {
               </div>
             </form>
           </div>
-
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             {currentUser ? (
@@ -272,7 +274,7 @@ const Overview = () => {
           </div>
 
           {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="absolute bottom-15 left-1/2 transform -translate-x-1/2 animate-bounce">
             <ChevronDown className="w-8 h-8 text-gray-400" />
           </div>
         </div>

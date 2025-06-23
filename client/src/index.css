@@ -183,11 +183,6 @@
   }
 }
 
-/* Enhanced form focus states - Update for purple theme */
-.dark input:focus {
-  box-shadow: 0 0 0 3px rgba(161, 114, 196, 0.2);
-}
-
 /* Better focus ring for dark mode */
 .dark .focus-ring {
   outline: 2px solid #b690d1;
@@ -481,9 +476,64 @@ body::-webkit-scrollbar-thumb:hover {
   animation-fill-mode: forwards;
 }
 
-/* Enhanced form focus states - Replace existing */
+/* Replace the existing input focus styles (around line 485) with these improved ones: */
+
+/* Default form focus states */
 input:focus {
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+/* Dark mode default focus */
+.dark input:focus {
+  box-shadow: 0 0 0 3px rgba(161, 114, 196, 0.2);
+}
+
+/* Orange/Amber focus for Overview and Home pages */
+.hero-search input:focus,
+.search-enhanced input:focus {
+  box-shadow: none !important;
+  border-color: none !important;
+}
+
+.dark .hero-search input:focus,
+.dark .search-enhanced input:focus {
+  box-shadow: none !important;
+  border-color: none !important;
+}
+
+/* Subtle focus for other search bars */
+.search-bar input:focus {
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.1);
+  border-color: #fed7aa;
+}
+
+.dark .search-bar input:focus {
+  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.15);
+  border-color: #fdba74;
+}
+
+/* Enhanced gradient focus ring for special inputs */
+.gradient-focus input:focus {
+  box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.3),
+    0 0 0 3px rgba(245, 158, 11, 0.15), 0 4px 12px rgba(249, 115, 22, 0.1);
+  border-color: transparent;
+}
+
+.dark .gradient-focus input:focus {
+  box-shadow: 0 0 0 1px rgba(251, 146, 60, 0.4),
+    0 0 0 3px rgba(252, 211, 77, 0.2), 0 4px 12px rgba(251, 146, 60, 0.15);
+}
+
+/* Remove focus styles for specific components */
+.no-focus-ring input:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Smooth transitions for all focus states */
+input {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 /* Custom Font Face */
