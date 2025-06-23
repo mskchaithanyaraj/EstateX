@@ -145,7 +145,7 @@ const Overview = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-main overflow-x-hidden">
+    <div className="min-h-screen bg-main overflow-x-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Hero Section with Parallax */}
       <section
         ref={heroRef}
@@ -157,15 +157,15 @@ const Overview = () => {
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div
-            className="absolute top-20 left-10 w-72 h-72 bg-orange-200 dark:bg-orange-900/20 rounded-full opacity-20 animate-pulse"
+            className="absolute top-20 left-10 w-72 h-72 bg-orange-200 dark:bg-yellow-600/20 rounded-full opacity-20 animate-pulse"
             style={{ transform: `translateY(${scrollY * 0.3}px)` }}
           />
           <div
-            className="absolute bottom-32 right-16 w-96 h-96 bg-amber-200 dark:bg-amber-900/20 rounded-full opacity-15 animate-pulse delay-1000"
+            className="absolute bottom-32 right-16 w-96 h-96 bg-amber-200 dark:bg-green-900 rounded-full opacity-15 animate-pulse delay-1000"
             style={{ transform: `translateY(${scrollY * -0.2}px)` }}
           />
           <div
-            className="absolute top-1/2 left-1/2 w-64 h-64 bg-yellow-200 dark:bg-yellow-900/20 rounded-full opacity-10 animate-pulse delay-500"
+            className="absolute top-1/2 left-1/2 w-64 h-64 bg-yellow-200 dark:bg-green-900 rounded-full opacity-10 animate-pulse delay-500"
             style={{
               transform: `translate(-50%, -50%) translateY(${scrollY * 0.1}px)`,
             }}
