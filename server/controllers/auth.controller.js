@@ -50,7 +50,7 @@ export const signin = async (req, res, next) => {
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "None",
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
         path: "/",
       })
       .status(200)
@@ -79,7 +79,7 @@ export const googleAuth = async (req, res, next) => {
           httpOnly: true,
           maxAge: 7 * 24 * 60 * 60 * 1000,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "None",
+          sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
           path: "/",
         })
         .status(200)
@@ -110,7 +110,7 @@ export const googleAuth = async (req, res, next) => {
           httpOnly: true,
           maxAge: 7 * 24 * 60 * 60 * 1000,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "None",
+          sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
           path: "/",
         })
         .status(200)
@@ -127,7 +127,7 @@ export const signout = (req, res, next) => {
       .clearCookie("access_token", {
         httpOnly: true,
         secure: true,
-        sameSite: "None",
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
         path: "/",
       })
       .status(200)
