@@ -13,14 +13,15 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      process.env.CLIENT_URL, // Vite dev server
-    ],
+    origin: [process.env.CLIENT_URL],
     credentials: true, // Allow cookies and credentials
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    sameSite: "strict",
   })
 );
+
+app.set("trust proxy", 1);
 
 mongoose
   .connect(process.env.MONGO_URI)

@@ -48,9 +48,10 @@ export const signin = async (req, res, next) => {
     res
       .cookie("access_token", token, {
         httpOnly: true,
-        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "None",
+        path: "/",
       })
       .status(200)
       .json(userDetails);
@@ -76,9 +77,10 @@ export const googleAuth = async (req, res, next) => {
       return res
         .cookie("access_token", token, {
           httpOnly: true,
-          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+          maxAge: 7 * 24 * 60 * 60 * 1000,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          sameSite: "None",
+          path: "/",
         })
         .status(200)
         .json(userDetails);
@@ -106,9 +108,10 @@ export const googleAuth = async (req, res, next) => {
       return res
         .cookie("access_token", token, {
           httpOnly: true,
-          expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+          maxAge: 7 * 24 * 60 * 60 * 1000,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "strict",
+          sameSite: "None",
+          path: "/",
         })
         .status(200)
         .json(userDetails);
@@ -121,7 +124,12 @@ export const googleAuth = async (req, res, next) => {
 export const signout = (req, res, next) => {
   try {
     res
-      .clearCookie("access_token")
+      .clearCookie("access_token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        path: "/",
+      })
       .status(200)
       .json({ message: "Signed out successfully" });
   } catch (error) {
