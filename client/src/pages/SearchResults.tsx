@@ -376,7 +376,9 @@ const SearchResults = () => {
               <select
                 value={filters.sortBy || "date-desc"}
                 onChange={(e) =>
-                  updateFilters({ sortBy: e.target.value as any })
+                  updateFilters({
+                    sortBy: e.target.value as SearchFilters["sortBy"],
+                  })
                 }
                 className="w-full sm:w-auto px-3 py-2 bg-card border border-default rounded-lg text-primary focus:outline-none focus:ring-2 focus:ring-accent text-sm"
               >
@@ -594,7 +596,10 @@ const SearchResults = () => {
                     <select
                       value={filters.propertyType || ""}
                       onChange={(e) =>
-                        updateFilters({ propertyType: e.target.value as any })
+                        updateFilters({
+                          propertyType: e.target
+                            .value as SearchFilters["propertyType"],
+                        })
                       }
                       className="w-full px-3 py-2 bg-section border border-default rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-primary text-sm"
                     >

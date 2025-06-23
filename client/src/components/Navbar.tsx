@@ -38,7 +38,7 @@ const Navbar = () => {
       // Always clear Redux state regardless of API result
       dispatch(signOut());
       setIsProfileDropdownOpen(false);
-      navigate("/sign-in", { replace: true });
+      navigate("/overview", { replace: true });
     }
   };
   const handleSearch = (e: React.FormEvent) => {

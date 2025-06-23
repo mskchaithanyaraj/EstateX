@@ -126,12 +126,12 @@ const Home = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by location, property type, or area..."
+                    placeholder="Search by location..."
                     className="flex-1 px-4 py-4 bg-transparent text-primary placeholder-muted focus:outline-none text-lg border-none"
                   />
                   <button
                     type="submit"
-                    className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2 shadow-lg"
+                    className="cursor-pointer bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2 shadow-lg"
                   >
                     <span>Search</span>
                     <ArrowRight className="w-5 h-5" />

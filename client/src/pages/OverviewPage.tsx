@@ -119,7 +119,7 @@ const Overview = () => {
 
   const testimonials = [
     {
-      name: "Priya Sharma",
+      name: "Teja Nadella",
       role: "Property Investor",
       image:
         "https://ui-avatars.com/api/?name=Priya+Sharma&background=f97316&color=fff",
@@ -127,7 +127,7 @@ const Overview = () => {
       rating: 5,
     },
     {
-      name: "Rajesh Kumar",
+      name: "Pavan Vanapalli",
       role: "First-time Buyer",
       image:
         "https://ui-avatars.com/api/?name=Rajesh+Kumar&background=3b82f6&color=fff",
@@ -135,7 +135,7 @@ const Overview = () => {
       rating: 5,
     },
     {
-      name: "Anita Patel",
+      name: "Srikanth Tadinada",
       role: "Real Estate Agent",
       image:
         "https://ui-avatars.com/api/?name=Anita+Patel&background=10b981&color=fff",
@@ -359,7 +359,7 @@ const Overview = () => {
                     <feature.icon className="w-6 h-6 text-white" />
                   </div>
                   <h3
-                    className="text-xl font-semibold text-gray-800 dark:text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:bg-clip-text"
+                    className="text-xl font-semibold text-gray-800 dark:text-white mb-3 group-hover:bg-gradient-to-r group-hover:bg-clip-text"
                     style={{
                       background: `linear-gradient(135deg, ${feature.gradient})`,
                     }}

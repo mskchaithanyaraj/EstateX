@@ -314,7 +314,9 @@ export const listingAPI = {
 
     return result;
   },
-  searchListings: async (filters: any): Promise<Listing[]> => {
+  searchListings: async (
+    filters: Record<string, string | number | boolean | undefined>
+  ): Promise<Listing[]> => {
     const searchParams = new URLSearchParams();
 
     Object.entries(filters).forEach(([key, value]) => {

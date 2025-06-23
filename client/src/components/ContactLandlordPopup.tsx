@@ -36,8 +36,12 @@ const ContactLandlordPopup = ({
           setMessage(
             `Hi ${landlordData.fullname},\n\nI'm interested in your property listing: "${listingTitle}".\n\nCould you please provide more details?\n\nThank you!`
           );
-        } catch (err: any) {
-          setError(err.message || "Failed to fetch landlord information");
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            setError(err.message || "Failed to fetch landlord information");
+          } else {
+            setError("Failed to fetch landlord information");
+          }
         } finally {
           setLoading(false);
         }
