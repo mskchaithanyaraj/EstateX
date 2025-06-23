@@ -32,11 +32,11 @@ const App = () => {
         {/* Public Routes */}
         <Route path="/overview" element={<OverviewPage />} />
         <Route path="/not-found" element={<NotFound />} />
-        <Route path="/contact" element={<Contact />} />
+        {/* TODO: Add contact inside profile or settings Routes */}
+        <Route path="/contact" element={<Contact />} />{" "}
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/terms-and-privacy" element={<TermsAndPrivacy />} />
-
         {/* Private Routes */}
         <Route
           path="/*"
@@ -55,7 +55,6 @@ const App = () => {
             </PrivateRoutes>
           }
         />
-
         {/* Catch all route */}
         <Route path="*" element={<Navigate to="/not-found" replace />} />
       </Routes>

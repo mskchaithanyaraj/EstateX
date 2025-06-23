@@ -97,8 +97,6 @@ const Navbar = () => {
                 ...(currentUser
                   ? [{ to: "/my-listings", label: "My Listings" }]
                   : []),
-
-                { to: "/contact", label: "Contact" },
               ].map(({ to, label }) => (
                 <li key={to}>
                   <Link
@@ -284,7 +282,6 @@ const Navbar = () => {
               ...(currentUser
                 ? [{ to: "/", label: "Home" }]
                 : [{ to: "/overview", label: "Overview" }]),
-              { to: "/contact", label: "Contact" },
             ].map(({ to, label }) => (
               <Link
                 key={to}

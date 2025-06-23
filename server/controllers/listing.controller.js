@@ -171,7 +171,14 @@ export const getListingById = async (req, res, next) => {
       return next(createError(404, "Listing not found"));
     }
 
-    res.json(listing);
+    const response = {
+      ...listing._doc,
+      user: listing.userId,
+    };
+
+    delete response.userId;
+
+    res.json(response);
   } catch (error) {
     console.error("Get listing error:", error);
     next(createError(500, "Failed to fetch listing"));

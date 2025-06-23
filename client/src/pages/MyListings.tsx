@@ -184,7 +184,7 @@ const MyListings = () => {
                         className={`px-3 py-1 rounded-full text-xs font-medium ${
                           listing.type === "sale"
                             ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400"
-                            : "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400"
+                            : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-400"
                         }`}
                       >
                         For {listing.type === "sale" ? "Sale" : "Rent"}

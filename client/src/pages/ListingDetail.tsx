@@ -15,6 +15,7 @@ import {
   Mail,
   ChevronLeft,
   ChevronRight,
+  MoreVertical,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../redux/user/userSlice";
@@ -34,6 +35,7 @@ const ListingDetail = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showActions, setShowActions] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -43,6 +45,7 @@ const ListingDetail = () => {
         setIsLoading(true);
         try {
           const listingData = await listingAPI.getListingById(id);
+          console.log("Fetched listing data:", listingData);
           setListing(listingData);
         } catch (error) {
           console.error("Error fetching listing:", error);
@@ -104,7 +107,7 @@ const ListingDetail = () => {
     }
   };
 
-  const isOwner = currentUser?.id === listing?.user._id;
+  const isOwner = currentUser?.id === listing?.user?._id;
 
   if (isLoading) {
     return (
@@ -146,41 +149,53 @@ const ListingDetail = () => {
       />
 
       <div className="min-h-screen bg-main">
-        {/* Header */}
-        <div className="bg-card border-b border-default sticky top-16 z-40">
-          <div className="max-w-7xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <button
-                onClick={() => navigate(-1)}
-                className="flex items-center space-x-2 text-primary hover:text-accent transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-                <span>Back</span>
-              </button>
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          {/* Header with Back Button and Actions */}
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center space-x-2 text-primary hover:text-accent transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back</span>
+            </button>
 
-              {isOwner && (
-                <div className="flex items-center space-x-3">
-                  <Link
-                    to={`/listings/${listing._id}/edit`}
-                    className="btn-secondary px-4 py-2 rounded-lg flex items-center space-x-2"
-                  >
-                    <Edit className="w-4 h-4" />
-                    <span>Edit</span>
-                  </Link>
-                  <button
-                    onClick={() => setShowDeleteWarning(true)}
-                    className="bg-red-100 hover:bg-red-200 dark:bg-red-900/20 dark:hover:bg-red-800/30 text-red-600 dark:text-red-400 px-4 py-2 rounded-lg transition-colors flex items-center space-x-2"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    <span>Delete</span>
-                  </button>
-                </div>
-              )}
-            </div>
+            {isOwner && (
+              <div className="relative">
+                <button
+                  onClick={() => setShowActions(!showActions)}
+                  className="w-8 h-8 flex items-center justify-center text-primary hover:text-accent transition-colors"
+                >
+                  <MoreVertical className="w-5 h-5" />
+                </button>
+
+                {/* Actions Dropdown */}
+                {showActions && (
+                  <div className="absolute right-0 top-10 bg-card border border-default rounded-lg shadow-lg py-1 z-50 min-w-[120px]">
+                    <Link
+                      to={`/listings/${listing._id}/edit`}
+                      className="flex items-center space-x-2 px-3 py-2 text-primary hover:bg-section transition-colors"
+                      onClick={() => setShowActions(false)}
+                    >
+                      <Edit className="w-4 h-4" />
+                      <span>Edit</span>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setShowDeleteWarning(true);
+                        setShowActions(false);
+                      }}
+                      className="w-full flex items-center space-x-2 px-3 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      <span>Delete</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Images and Details */}
             <div className="lg:col-span-2 space-y-8">
@@ -249,12 +264,12 @@ const ListingDetail = () => {
                 <div className="space-y-6">
                   {/* Title and Status */}
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h1 className="text-3xl font-bold text-primary">
+                    <div className="flex items-start justify-between mb-2">
+                      <h1 className="text-3xl font-bold text-primary flex-1 mr-4">
                         {listing.title}
                       </h1>
                       <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${
                           listing.type === "sale"
                             ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
                             : "bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400"
@@ -368,43 +383,45 @@ const ListingDetail = () => {
             {/* Right Column - Owner Info and Actions */}
             <div className="space-y-6">
               {/* Owner Information */}
-              <div className="bg-card rounded-2xl shadow-xl border border-default p-6">
-                <h3 className="text-lg font-semibold text-primary mb-4">
-                  Listed By
-                </h3>
-                <div className="flex items-center space-x-4 mb-4">
-                  <img
-                    src={
-                      listing.user.avatar?.url ||
-                      `https://ui-avatars.com/api/?name=${listing.user.fullname}&background=f97316&color=fff`
-                    }
-                    alt={listing.user.fullname}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <div className="font-semibold text-primary">
-                      {listing.user.fullname}
-                    </div>
-                    <div className="text-sm text-muted">
-                      @{listing.user.username}
+              {listing.user && (
+                <div className="bg-card rounded-2xl shadow-xl border border-default p-6">
+                  <h3 className="text-lg font-semibold text-primary mb-4">
+                    Listed By
+                  </h3>
+                  <div className="flex items-center space-x-4 mb-4">
+                    <img
+                      src={
+                        listing.user?.avatar?.url ||
+                        `https://ui-avatars.com/api/?name=${listing.user.fullname}&background=f97316&color=fff`
+                      }
+                      alt={listing.user.fullname}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="font-semibold text-primary">
+                        {listing.user.fullname}
+                      </div>
+                      <div className="text-sm text-muted">
+                        @{listing.user.username}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {!isOwner && (
-                  <div className="space-y-3">
-                    <button className="w-full btn-primary py-3 rounded-xl flex items-center justify-center space-x-2">
-                      <Phone className="w-4 h-4" />
-                      <span>Call Owner</span>
-                    </button>
-                    <button className="w-full btn-secondary py-3 rounded-xl flex items-center justify-center space-x-2">
-                      <Mail className="w-4 h-4" />
-                      <span>Send Message</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-              {/*  TODO : ADD QUICK ACTIONS FUNCTIONALITY */}
+                  {!isOwner && (
+                    <div className="space-y-3">
+                      <button className="w-full btn-primary py-3 rounded-xl flex items-center justify-center space-x-2">
+                        <Phone className="w-4 h-4" />
+                        <span>Call Owner</span>
+                      </button>
+                      <button className="w-full btn-secondary py-3 rounded-xl flex items-center justify-center space-x-2">
+                        <Mail className="w-4 h-4" />
+                        <span>Send Message</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Quick Actions */}
               <div className="bg-card rounded-2xl shadow-xl border border-default p-6">
                 <h3 className="text-lg font-semibold text-primary mb-4">
@@ -413,6 +430,7 @@ const ListingDetail = () => {
                 <div className="space-y-3">
                   <button className="w-full btn-secondary py-3 rounded-xl flex items-center justify-center space-x-2">
                     <Share2 className="w-4 h-4" />
+                    // TODO: ADD SHARE COPY LINK
                     <span>Share Listing</span>
                   </button>
                   <button className="w-full btn-secondary py-3 rounded-xl flex items-center justify-center space-x-2">
@@ -424,6 +442,14 @@ const ListingDetail = () => {
             </div>
           </div>
         </div>
+
+        {/* Click outside to close dropdown */}
+        {showActions && (
+          <div
+            className="fixed inset-0 z-30"
+            onClick={() => setShowActions(false)}
+          />
+        )}
       </div>
     </>
   );
