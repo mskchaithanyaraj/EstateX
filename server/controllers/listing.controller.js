@@ -387,3 +387,124 @@ export const deleteListing = async (req, res, next) => {
     next(createError(500, "Failed to delete listing"));
   }
 };
+
+export const searchListings = async (req, res, next) => {
+  try {
+    const {
+      location,
+      type,
+      minPrice,
+      maxPrice,
+      bedrooms,
+      bathrooms,
+      propertyType,
+      minArea,
+      maxArea,
+      sortBy,
+      page = 1,
+      limit = 20,
+    } = req.query;
+
+    // Build the query
+    let query = {};
+
+    // Location filter (case-insensitive search)
+    if (location) {
+      query.location = { $regex: location, $options: "i" };
+    }
+
+    // Type filter
+    if (type && (type === "rent" || type === "sale")) {
+      query.type = type;
+    }
+
+    // Price filter
+    if (minPrice || maxPrice) {
+      const priceField = type === "sale" ? "sellingPrice" : "rentalPrice";
+      query[priceField] = {};
+
+      if (minPrice) {
+        query[priceField].$gte = Number(minPrice);
+      }
+      if (maxPrice) {
+        query[priceField].$lte = Number(maxPrice);
+      }
+    }
+
+    // Bedrooms filter
+    if (bedrooms) {
+      query["houseSpecifications.bedrooms"] = { $gte: Number(bedrooms) };
+    }
+
+    // Bathrooms filter
+    if (bathrooms) {
+      query["houseSpecifications.bathrooms"] = { $gte: Number(bathrooms) };
+    }
+
+    // Property type filter
+    if (
+      propertyType &&
+      ["apartment", "house", "land", "other"].includes(propertyType)
+    ) {
+      query["houseSpecifications.type"] = propertyType;
+    }
+
+    // Area filter
+    if (minArea || maxArea) {
+      query["houseSpecifications.area"] = {};
+
+      if (minArea) {
+        query["houseSpecifications.area"].$gte = Number(minArea);
+      }
+      if (maxArea) {
+        query["houseSpecifications.area"].$lte = Number(maxArea);
+      }
+    }
+
+    // Build sort options
+    let sortOptions = {};
+    switch (sortBy) {
+      case "price-asc":
+        sortOptions =
+          type === "sale" ? { sellingPrice: 1 } : { rentalPrice: 1 };
+        break;
+      case "price-desc":
+        sortOptions =
+          type === "sale" ? { sellingPrice: -1 } : { rentalPrice: -1 };
+        break;
+      case "date-asc":
+        sortOptions = { createdAt: 1 };
+        break;
+      case "date-desc":
+      default:
+        sortOptions = { createdAt: -1 };
+        break;
+    }
+
+    // Calculate pagination
+    const skip = (Number(page) - 1) * Number(limit);
+
+    // Execute query
+    const listings = await Listing.find(query)
+      .populate("userId", "fullname username avatar")
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(Number(limit));
+
+    // Get total count for pagination
+    const total = await Listing.countDocuments(query);
+
+    // Transform response - FIX: Return just the listings array
+    const transformedListings = listings.map((listing) => ({
+      ...listing._doc,
+      user: listing.userId,
+      userId: undefined,
+    }));
+
+    // Return just the listings array, not wrapped in an object
+    res.json(transformedListings);
+  } catch (error) {
+    console.error("Search listings error:", error);
+    next(createError(500, "Failed to search listings"));
+  }
+};

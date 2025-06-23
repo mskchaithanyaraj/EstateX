@@ -314,6 +314,56 @@ export const listingAPI = {
 
     return result;
   },
+  searchListings: async (filters: any): Promise<Listing[]> => {
+    const searchParams = new URLSearchParams();
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== "" && value !== null) {
+        searchParams.set(key, value.toString());
+      }
+    });
+
+    const response = await fetch(
+      `${API_BASE_URL}/listing/search?${searchParams.toString()}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to search listings");
+    }
+
+    return result;
+  },
+  searchByLocation: async (location: string): Promise<Listing[]> => {
+    const searchParams = new URLSearchParams();
+    searchParams.set("location", location);
+
+    const response = await fetch(
+      `${API_BASE_URL}/listing/search?${searchParams.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to search listings");
+    }
+
+    return result;
+  },
 };
 
 export const userAPI = {

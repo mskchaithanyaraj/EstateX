@@ -6,10 +6,13 @@ import {
   deleteListing,
   getListingById,
   updateListing,
+  searchListings,
 } from "../controllers/listing.controller.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 const listingRouter = express.Router();
+
+listingRouter.get("/search", verifyToken, searchListings);
 
 // Create listing with multiple image uploads
 listingRouter.post(

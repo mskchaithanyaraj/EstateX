@@ -14,6 +14,8 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { currentUser } = useSelector(selectCurrentUser);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -37,6 +39,21 @@ const Navbar = () => {
       dispatch(signOut());
       setIsProfileDropdownOpen(false);
       navigate("/sign-in", { replace: true });
+    }
+  };
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const trimmedQuery = searchQuery.trim();
+
+    if (trimmedQuery) {
+      // Navigate to search page with location parameter
+      navigate(`/search?location=${encodeURIComponent(trimmedQuery)}`);
+
+      // Close mobile menu if open
+      setIsMenuOpen(false);
+
+      setSearchQuery("");
     }
   };
 
@@ -64,11 +81,13 @@ const Navbar = () => {
 
           {/* Search Bar - Hidden on mobile */}
           <div className="hidden md:flex flex-1 max-w-md mx-8">
-            <form className="w-full">
+            <form className="w-full" onSubmit={handleSearch}>
               <div className="relative group">
                 <input
                   type="text"
-                  placeholder="Search properties..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search properties by location..."
                   className="w-full bg-input text-primary 
                            border border-input rounded-full py-2 pl-4 pr-10 
                            focus:outline-none focus:border-input-focus focus:ring-2 focus:ring-orange-500/20
@@ -76,7 +95,7 @@ const Navbar = () => {
                 />
                 <button
                   type="submit"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 
+                  className="cursor-pointer absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 
                            text-muted hover:text-accent 
                            transition-colors duration-200"
                 >
@@ -251,11 +270,13 @@ const Navbar = () => {
 
         {/* Mobile Search Bar */}
         <div className="md:hidden pb-3">
-          <form>
+          <form onSubmit={handleSearch}>
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search properties..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search properties by location..."
                 className="w-full bg-input text-primary 
                          border border-input rounded-full py-2 pl-4 pr-10 
                          focus:outline-none focus:border-input-focus focus:ring-2 focus:ring-orange-500/20

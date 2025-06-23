@@ -17,6 +17,7 @@ import CreateListing from "./pages/CreateListing";
 import MyListings from "./pages/MyListings";
 import ListingDetail from "./pages/ListingDetail";
 import EditListing from "./pages/EditListing";
+import SearchResults from "./pages/SearchResults";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ const App = () => {
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/create-listing" element={<CreateListing />} />
                 <Route path="/my-listings" element={<MyListings />} />
+                <Route path="/search" element={<SearchResults />} />
                 <Route path="/listings/:id/edit" element={<EditListing />} />
               </Routes>
             </PrivateRoutes>
