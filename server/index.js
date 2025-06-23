@@ -35,9 +35,9 @@ app.listen(process.env.PORT || 5000, () => {
   console.log(`Server is running on port ${process.env.PORT || 5000}`);
 });
 
-app.use("/api/user/:userId", userRouter);
+app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/listing/", listingRouter);
+app.use("/api/listing", listingRouter);
 
 // Global error handler
 app.use((err, req, res, next) => {

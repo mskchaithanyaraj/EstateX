@@ -12,7 +12,6 @@ import {
   Share2,
   Heart,
   Phone,
-  Mail,
   ChevronLeft,
   ChevronRight,
   MoreVertical,
@@ -24,6 +23,7 @@ import { showErrorToast, showSuccessToast } from "../utils/custom-toast";
 import LoadingOverlay from "../components/LoadingOverlay";
 import WarningPopup from "../components/WarningPopup";
 import type { Listing } from "../types/listing.types";
+import ContactLandlordPopup from "../components/ContactLandlordPopup";
 
 const ListingDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -36,6 +36,8 @@ const ListingDetail = () => {
   const [showDeleteWarning, setShowDeleteWarning] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showActions, setShowActions] = useState(false);
+  const [showContactLandlordPopup, setShowContactLandlordPopup] =
+    useState(false);
 
   useEffect(() => {
     if (id) {
@@ -58,6 +60,25 @@ const ListingDetail = () => {
       fetchListing();
     }
   }, [id, navigate]);
+
+  const handleShareListing = () => {
+    const currentUrl = window.location.href;
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        showSuccessToast("Link Copied!", currentUrl);
+      })
+      .catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = currentUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+        showSuccessToast("Link Copied!", currentUrl);
+      });
+  };
 
   const handleDeleteListing = async () => {
     if (!listing) return;
@@ -406,19 +427,6 @@ const ListingDetail = () => {
                       </div>
                     </div>
                   </div>
-
-                  {!isOwner && (
-                    <div className="space-y-3">
-                      <button className="w-full btn-primary py-3 rounded-xl flex items-center justify-center space-x-2">
-                        <Phone className="w-4 h-4" />
-                        <span>Call Owner</span>
-                      </button>
-                      <button className="w-full btn-secondary py-3 rounded-xl flex items-center justify-center space-x-2">
-                        <Mail className="w-4 h-4" />
-                        <span>Send Message</span>
-                      </button>
-                    </div>
-                  )}
                 </div>
               )}
 
@@ -428,11 +436,27 @@ const ListingDetail = () => {
                   Quick Actions
                 </h3>
                 <div className="space-y-3">
-                  <button className="w-full btn-secondary py-3 rounded-xl flex items-center justify-center space-x-2">
+                  {!isOwner && (
+                    <div className="space-y-3">
+                      <button
+                        onClick={() => setShowContactLandlordPopup(true)}
+                        className="w-full btn-primary py-3 rounded-xl flex items-center justify-center space-x-2"
+                      >
+                        <Phone className="w-4 h-4" />
+                        <span>Contact Landlord</span>
+                      </button>
+                    </div>
+                  )}
+
+                  <button
+                    className="cursor-pointer w-full btn-secondary py-3 rounded-xl flex items-center justify-center space-x-2"
+                    onClick={handleShareListing}
+                  >
                     <Share2 className="w-4 h-4" />
-                    // TODO: ADD SHARE COPY LINK
                     <span>Share Listing</span>
                   </button>
+
+                  {/* TODO: Save to Favorites */}
                   <button className="w-full btn-secondary py-3 rounded-xl flex items-center justify-center space-x-2">
                     <Heart className="w-4 h-4" />
                     <span>Save to Favorites</span>
@@ -451,6 +475,13 @@ const ListingDetail = () => {
           />
         )}
       </div>
+
+      <ContactLandlordPopup
+        isOpen={showContactLandlordPopup}
+        onClose={() => setShowContactLandlordPopup(false)}
+        landlordId={listing?.user?._id}
+        listingTitle={listing?.title}
+      />
     </>
   );
 };

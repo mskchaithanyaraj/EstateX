@@ -315,3 +315,20 @@ export const listingAPI = {
     return result;
   },
 };
+
+export const userAPI = {
+  getUserById: async (userId: string): Promise<User> => {
+    const response = await fetch(`${API_BASE_URL}/user/${userId}`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to fetch user");
+    }
+
+    return result;
+  },
+};

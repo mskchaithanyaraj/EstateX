@@ -37,6 +37,7 @@ const App = () => {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/terms-and-privacy" element={<TermsAndPrivacy />} />
+        <Route path="/listings/:id" element={<ListingDetail />} />
         {/* Private Routes */}
         <Route
           path="/*"
@@ -47,9 +48,7 @@ const App = () => {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/create-listing" element={<CreateListing />} />
-
                 <Route path="/my-listings" element={<MyListings />} />
-                <Route path="/listings/:id" element={<ListingDetail />} />
                 <Route path="/listings/:id/edit" element={<EditListing />} />
               </Routes>
             </PrivateRoutes>

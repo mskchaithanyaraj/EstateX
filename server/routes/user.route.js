@@ -8,25 +8,30 @@ import {
   updateProfile,
   deleteUser,
   getUserListings,
+  getUser,
 } from "../controllers/user.controller.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 const userRouter = express.Router();
 
-// Apply auth middleware to all routes
-userRouter.use(verifyToken);
-
 // Avatar upload
-userRouter.patch("/avatar", upload.single("avatar"), updateAvatar);
+userRouter.patch(
+  "/:userId/avatar",
+  verifyToken,
+  upload.single("avatar"),
+  updateAvatar
+);
 
 // Update profile (fullname and username only)
-userRouter.patch("/profile", updateProfile);
+userRouter.patch("/:userId/profile", verifyToken, updateProfile);
 
 // Change password
-userRouter.patch("/change-password", updatePassword);
+userRouter.patch("/:userId/change-password", verifyToken, updatePassword);
 
-userRouter.delete("/delete", deleteUser);
+userRouter.delete("/:userId/delete", verifyToken, deleteUser);
 
-userRouter.get("/listings", getUserListings);
+userRouter.get("/:userId/listings", verifyToken, getUserListings);
+
+userRouter.get("/:id", verifyToken, getUser);
 
 export default userRouter;

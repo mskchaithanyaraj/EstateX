@@ -19,8 +19,8 @@ listingRouter.post(
   createListing
 );
 
-// Get single listing by ID
-listingRouter.get("/:listingId", verifyToken, getListingById);
+// Get single listing by ID (PUBLIC ROUTE - no auth required)
+listingRouter.get("/:listingId", getListingById);
 
 // Update listing
 listingRouter.put(
