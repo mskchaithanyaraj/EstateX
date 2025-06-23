@@ -382,7 +382,15 @@ const Home = () => {
               {/* Sort */}
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  setSortBy(
+                    e.target.value as
+                      | "date-desc"
+                      | "date-asc"
+                      | "price-asc"
+                      | "price-desc"
+                  )
+                }
                 className="px-4 py-2 bg-card border border-default rounded-lg text-primary focus:outline-none focus:ring-2 focus:ring-accent"
               >
                 <option value="date-desc">Newest First</option>
