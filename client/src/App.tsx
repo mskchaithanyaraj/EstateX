@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import Home from "./pages/Home";
@@ -18,9 +19,11 @@ import MyListings from "./pages/MyListings";
 import ListingDetail from "./pages/ListingDetail";
 import EditListing from "./pages/EditListing";
 import SearchResults from "./pages/SearchResults";
+import PageTransition from "./components/PageTransition";
 
 const App = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
 
   useEffect(() => {
     dispatch(resetAuthState());
@@ -29,36 +32,144 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/overview" element={<OverviewPage />} />
-        <Route path="/not-found" element={<NotFound />} />
-        {/* TODO: Add contact inside profile or settings Routes */}
-        <Route path="/contact" element={<Contact />} />{" "}
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/terms-and-privacy" element={<TermsAndPrivacy />} />
-        <Route path="/listings/:id" element={<ListingDetail />} />
-        {/* Private Routes */}
-        <Route
-          path="/*"
-          element={
-            <PrivateRoutes>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/create-listing" element={<CreateListing />} />
-                <Route path="/my-listings" element={<MyListings />} />
-                <Route path="/search" element={<SearchResults />} />
-                <Route path="/listings/:id/edit" element={<EditListing />} />
-              </Routes>
-            </PrivateRoutes>
-          }
-        />
-        {/* Catch all route */}
-        <Route path="*" element={<Navigate to="/not-found" replace />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          {/* Public Routes */}
+          <Route
+            path="/overview"
+            element={
+              <PageTransition>
+                <OverviewPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/not-found"
+            element={
+              <PageTransition>
+                <NotFound />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <PageTransition>
+                <Contact />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/sign-in"
+            element={
+              <PageTransition>
+                <SignIn />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/sign-up"
+            element={
+              <PageTransition>
+                <SignUp />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/terms-and-privacy"
+            element={
+              <PageTransition>
+                <TermsAndPrivacy />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/listings/:id"
+            element={
+              <PageTransition>
+                <ListingDetail />
+              </PageTransition>
+            }
+          />
+
+          {/* Private Routes - Keep your reusable structure */}
+          <Route
+            path="/*"
+            element={
+              <PrivateRoutes>
+                <Routes location={location} key={location.pathname}>
+                  <Route
+                    path="/"
+                    element={
+                      <PageTransition>
+                        <Home />
+                      </PageTransition>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <PageTransition>
+                        <Profile />
+                      </PageTransition>
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <PageTransition>
+                        <Settings />
+                      </PageTransition>
+                    }
+                  />
+                  <Route
+                    path="/create-listing"
+                    element={
+                      <PageTransition>
+                        <CreateListing />
+                      </PageTransition>
+                    }
+                  />
+                  <Route
+                    path="/my-listings"
+                    element={
+                      <PageTransition>
+                        <MyListings />
+                      </PageTransition>
+                    }
+                  />
+                  <Route
+                    path="/search"
+                    element={
+                      <PageTransition>
+                        <SearchResults />
+                      </PageTransition>
+                    }
+                  />
+                  <Route
+                    path="/listings/:id/edit"
+                    element={
+                      <PageTransition>
+                        <EditListing />
+                      </PageTransition>
+                    }
+                  />
+                </Routes>
+              </PrivateRoutes>
+            }
+          />
+
+          {/* Catch all route */}
+          <Route
+            path="*"
+            element={
+              <PageTransition>
+                <Navigate to="/not-found" replace />
+              </PageTransition>
+            }
+          />
+        </Routes>
+      </AnimatePresence>
     </>
   );
 };
