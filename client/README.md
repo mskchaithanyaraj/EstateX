@@ -1,1 +1,0 @@
-# Frontend of MERN estate
