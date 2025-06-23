@@ -81,20 +81,6 @@
       }
     },
     {
-      "title": "Luxury Penthouse in Marine Drive",
-      "description": "Exclusive penthouse with panoramic ocean view, private terrace, jacuzzi, and premium interiors.",
-      "location": "Marine Drive, Mumbai, Maharashtra",
-      "type": "sale",
-      "sellingPrice": 85000000,
-      "discountedPrice": 78000000,
-      "houseSpecifications": {
-        "type": "apartment",
-        "bedrooms": 5,
-        "bathrooms": 4,
-        "area": 4500
-      }
-    },
-    {
       "title": "Traditional House in Old City",
       "description": "Heritage property with traditional architecture, courtyard, and modern amenities. Rich cultural surroundings.",
       "location": "Charminar, Hyderabad, Telangana",
@@ -197,20 +183,6 @@
         "bedrooms": 0,
         "bathrooms": 2,
         "area": 2000
-      }
-    },
-    {
-      "title": "Vintage Bungalow in Civil Lines",
-      "description": "Heritage bungalow with large verandas, high ceilings, and mature trees. Peaceful residential area.",
-      "location": "Civil Lines, Delhi, Delhi",
-      "type": "sale",
-      "sellingPrice": 45000000,
-      "discountedPrice": 42000000,
-      "houseSpecifications": {
-        "type": "house",
-        "bedrooms": 5,
-        "bathrooms": 3,
-        "area": 3500
       }
     },
     {
@@ -375,7 +347,7 @@
     },
     {
       "title": "Lavish 3BHK Apartment in Besant Nagar",
-      "description": "Sea‑facing 3 bedroom apartment with balcony, parking & pool in prime Chennai locality.",
+      "description": "Sea‑facing 3 bedroom apartment with balcony, parking & pool in prime Chennai locality.",
       "location": "Besant Nagar, Chennai, Tamil Nadu",
       "type": "rent",
       "rentalPrice": 45000,
@@ -441,7 +413,7 @@
     },
     {
       "title": "Sea‑View Flat in Alappuzha",
-      "description": "2 BHK apartment overlooking backwaters with balcony and serene vibes.",
+      "description": "2 BHK apartment overlooking backwaters with balcony and serene vibes.",
       "location": "Alappuzha, Kerala",
       "type": "rent",
       "rentalPrice": 18000,
@@ -450,33 +422,6 @@
         "bedrooms": 2,
         "bathrooms": 2,
         "area": 1000
-      }
-    },
-    {
-      "title": "Luxury Villa in Whitefield, Bengaluru",
-      "description": "Designer independent villa with private pool and garden near IT hubs.",
-      "location": "Whitefield, Bangalore, Karnataka",
-      "type": "sale",
-      "sellingPrice": 45000000,
-      "discountedPrice": 42000000,
-      "houseSpecifications": {
-        "type": "house",
-        "bedrooms": 5,
-        "bathrooms": 4,
-        "area": 3500
-      }
-    },
-    {
-      "title": "Compact 1BHK in Mylapore",
-      "description": "Efficient studio-style flat near temples, cafes, metro—perfect for singles.",
-      "location": "Mylapore, Chennai, Tamil Nadu",
-      "type": "rent",
-      "rentalPrice": 22000,
-      "houseSpecifications": {
-        "type": "apartment",
-        "bedrooms": 1,
-        "bathrooms": 1,
-        "area": 480
       }
     },
     {
@@ -531,6 +476,113 @@
         "bedrooms": 1,
         "bathrooms": 1,
         "area": 350
+      }
+    },
+    {
+      "title": "Sky Garden Penthouse in Banjara Hills",
+      "description": "Ultra-luxury penthouse with rooftop garden, infinity pool, and 360-degree city views.",
+      "location": "Banjara Hills, Hyderabad, Telangana",
+      "type": "sale",
+      "sellingPrice": 95000000,
+      "discountedPrice": 89000000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 6,
+        "bathrooms": 5,
+        "area": 5200
+      }
+    },
+    {
+      "title": "Artistic Loft in Hauz Khas Village",
+      "description": "Creative loft space with exposed brick walls, high ceilings, perfect for artists and designers.",
+      "location": "Hauz Khas Village, New Delhi, Delhi",
+      "type": "rent",
+      "rentalPrice": 45000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 1200
+      }
+    },
+    {
+      "title": "Wellness Villa in Arambol",
+      "description": "Zen-inspired villa with meditation hall, yoga deck, organic kitchen garden, and beach proximity.",
+      "location": "Arambol, North Goa, Goa",
+      "type": "rent",
+      "rentalPrice": 65000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 4,
+        "bathrooms": 3,
+        "area": 2400
+      }
+    },
+    {
+      "title": "Smart Apartment in Electronic City",
+      "description": "IoT-enabled 3BHK with voice control, automated lighting, climate control, and security systems.",
+      "location": "Electronic City Phase 1, Bangalore, Karnataka",
+      "type": "rent",
+      "rentalPrice": 38000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 1450
+      }
+    },
+    {
+      "title": "Hillside Manor in Mussoorie",
+      "description": "Colonial-style manor with wraparound veranda, fireplace, and breathtaking mountain vistas.",
+      "location": "Landour, Mussoorie, Uttarakhand",
+      "type": "sale",
+      "sellingPrice": 18000000,
+      "discountedPrice": 16500000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 5,
+        "bathrooms": 4,
+        "area": 3800
+      }
+    },
+    {
+      "title": "Floating Villa on Vembanad Lake",
+      "description": "Unique houseboat-villa with modern amenities, surrounded by serene backwaters and coconut groves.",
+      "location": "Vembanad Lake, Kumarakom, Kerala",
+      "type": "rent",
+      "rentalPrice": 85000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "area": 1800
+      }
+    },
+    {
+      "title": "Desert Palace in Blue City",
+      "description": "Restored haveli with traditional blue walls, courtyards, royal furnishings, and panoramic city views.",
+      "location": "Old City, Jodhpur, Rajasthan",
+      "type": "sale",
+      "sellingPrice": 35000000,
+      "discountedPrice": 32000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 8,
+        "bathrooms": 6,
+        "area": 4500
+      }
+    },
+    {
+      "title": "Minimalist Cube House in Auroville",
+      "description": "Sustainable concrete cube with solar panels, rainwater harvesting, and experimental living design.",
+      "location": "Auroville, Puducherry",
+      "type": "rent",
+      "rentalPrice": 32000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 1000
       }
     },
     {
@@ -624,33 +676,6 @@
         "bedrooms": 2,
         "bathrooms": 1,
         "area": 700
-      }
-    },
-    {
-      "title": "Luxury Penthouse in Dubai Marina",
-      "description": "Penthouse with marina view, private terrace and pool.",
-      "location": "Dubai Marina, Dubai, UAE",
-      "type": "sale",
-      "sellingPrice": 4500000,
-      "discountedPrice": 4200000,
-      "houseSpecifications": {
-        "type": "apartment",
-        "bedrooms": 4,
-        "bathrooms": 4,
-        "area": 3000
-      }
-    },
-    {
-      "title": "Countryside Cottage in Devon",
-      "description": "Quaint 2‑bedroom cottage with garden, near coast.",
-      "location": "Devon, England, UK",
-      "type": "rent",
-      "rentalPrice": 1500,
-      "houseSpecifications": {
-        "type": "house",
-        "bedrooms": 2,
-        "bathrooms": 1,
-        "area": 850
       }
     },
     {
