@@ -338,7 +338,7 @@ const SearchResults = () => {
             {/* Left side controls */}
             <div className="flex items-center gap-2">
               {/* View Mode Toggle */}
-              <div className="flex bg-section rounded-lg p-1">
+              <div className="hidden md:flex bg-section rounded-lg p-1">
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded transition-colors ${
@@ -367,7 +367,7 @@ const SearchResults = () => {
                 className="flex items-center space-x-2 px-3 py-2 bg-card border border-default rounded-lg hover:bg-section transition-colors text-sm"
               >
                 <SlidersHorizontal className="w-4 h-4" />
-                <span className="hidden sm:inline">Filters</span>
+                <span>Filters</span>
               </button>
             </div>
 
@@ -696,7 +696,7 @@ const SearchResults = () => {
                       <div
                         className={`relative overflow-hidden ${
                           viewMode === "list"
-                            ? "h-48 sm:w-64 sm:h-48 flex-shrink-0"
+                            ? " sm:w-64 h-48 md:h-73 flex-shrink-0"
                             : "h-48"
                         }`}
                       >
@@ -704,7 +704,7 @@ const SearchResults = () => {
                           <img
                             src={listing.images[0].url}
                             alt={listing.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className={`w-full  h-full object-cover group-hover:scale-105 transition-transform duration-300`}
                           />
                         ) : (
                           <div className="w-full h-full bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/20 dark:to-orange-800/20 flex items-center justify-center">
