@@ -119,7 +119,7 @@ const Overview = () => {
 
   const testimonials = [
     {
-      name: "Teja Nadella",
+      name: "Gafoor Nadella",
       role: "Property Investor",
       image:
         "https://ui-avatars.com/api/?name=Priya+Sharma&background=f97316&color=fff",
@@ -135,7 +135,7 @@ const Overview = () => {
       rating: 5,
     },
     {
-      name: "Srikanth Tadinada",
+      name: "Hemanth Ramagani",
       role: "Real Estate Agent",
       image:
         "https://ui-avatars.com/api/?name=Anita+Patel&background=10b981&color=fff",
