@@ -11,7 +11,7 @@ const PrivateRoutes: React.FC<PrivateRoutesProps> = ({ children }) => {
   const { currentUser } = useSelector(selectCurrentUser);
 
   if (!currentUser) {
-    return <Navigate to="/sign-in" replace />;
+    return <Navigate to="/overview" replace />;
   }
 
   return <>{children}</>;

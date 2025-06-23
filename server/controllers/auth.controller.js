@@ -128,3 +128,16 @@ export const signout = (req, res, next) => {
     next(error);
   }
 };
+
+export const wakeUp = async (req, res, next) => {
+  try {
+    // Simple response to wake up the server
+    res.status(200).json({
+      message: "Server is awake",
+      timestamp: new Date().toISOString(),
+      status: "ready",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -20,8 +20,22 @@ import ListingDetail from "./pages/ListingDetail";
 import EditListing from "./pages/EditListing";
 import SearchResults from "./pages/SearchResults";
 import PageTransition from "./components/PageTransition";
+import { authAPI } from "./services/api";
 
 const App = () => {
+  useEffect(() => {
+    const wakeUpServer = async () => {
+      try {
+        await authAPI.wakeUpServer();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // Wake up server immediately when component mounts
+    wakeUpServer();
+  }, []);
+
   const dispatch = useDispatch();
   const location = useLocation();
 

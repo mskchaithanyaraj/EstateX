@@ -113,28 +113,34 @@ const Home = () => {
           </div>
 
           {/* Enhanced Search Bar */}
-          <div className="max-w-4xl mx-auto mb-8">
+          <div className="max-w-4xl mx-auto mb-8 px-4 sm:px-0">
             <form
               onSubmit={handleSearch}
               className="relative group search-enhanced"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition-opacity duration-300" />
               <div className="relative bg-card rounded-2xl shadow-2xl border border-default">
-                <div className="flex items-center p-2">
-                  <Search className="w-6 h-6 text-muted ml-4" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by location..."
-                    className="flex-1 px-4 py-4 bg-transparent text-primary placeholder-muted focus:outline-none text-lg border-none"
-                  />
+                {/* Mobile & Desktop Layout */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center p-2 gap-2 sm:gap-0">
+                  {/* Search Input Container */}
+                  <div className="flex items-center flex-1 min-w-0">
+                    <Search className="w-5 h-5 sm:w-6 sm:h-6 text-muted ml-3 sm:ml-4 flex-shrink-0" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search by location..."
+                      className="flex-1 px-3 sm:px-4 py-3 sm:py-4 bg-transparent text-primary placeholder-muted focus:outline-none text-base sm:text-lg border-none min-w-0"
+                    />
+                  </div>
+
+                  {/* Search Button */}
                   <button
                     type="submit"
-                    className="cursor-pointer bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2 shadow-lg"
+                    className="cursor-pointer bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-4 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg w-full sm:w-auto"
                   >
-                    <span>Search</span>
-                    <ArrowRight className="w-5 h-5" />
+                    <span className="text-sm sm:text-base">Search</span>
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </div>
               </div>
@@ -226,7 +232,7 @@ const Home = () => {
                 to="/search"
                 className="text-accent hover:text-accent/80 font-medium flex items-center space-x-2 group"
               >
-                <span>View All</span>
+                <span className="hidden md:block">View </span> <span>All</span>
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -439,7 +445,7 @@ const Home = () => {
                   <div
                     className={`relative overflow-hidden ${
                       viewMode === "list"
-                        ? "h-48 sm:w-64 sm:h-48 flex-shrink-0"
+                        ? "h-48 sm:w-64 sm:h-48 md:h-74 flex-shrink-0"
                         : "h-48"
                     }`}
                   >

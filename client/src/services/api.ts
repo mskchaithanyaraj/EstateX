@@ -87,6 +87,33 @@ export const authAPI = {
       // Still clear local state even if API call fails
     }
   },
+  wakeUpServer: async (): Promise<{
+    message: string;
+    timestamp: string;
+    status: string;
+  }> => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/wake-up`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // No credentials needed for wake-up call
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Wake-up failed");
+      }
+
+      return result;
+    } catch (error) {
+      // Silently fail - we don't want to show errors for wake-up calls
+      console.log("🔄 Server wake-up call made");
+      throw error;
+    }
+  },
 };
 
 export const profileAPI = {

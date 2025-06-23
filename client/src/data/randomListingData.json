@@ -1,0 +1,671 @@
+{
+  "listings": [
+    {
+      "title": "Luxurious 3BHK Apartment in Bandra West",
+      "description": "Spacious 3-bedroom apartment with modern amenities, parking space, and stunning sea view. Located in the heart of Mumbai's premium locality.",
+      "location": "Bandra West, Mumbai, Maharashtra",
+      "type": "rent",
+      "rentalPrice": 85000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 1250
+      }
+    },
+    {
+      "title": "Modern 2BHK Flat in Koramangala",
+      "description": "Well-ventilated 2-bedroom flat with balcony, modular kitchen, and 24/7 security. Close to IT parks and metro station.",
+      "location": "Koramangala 4th Block, Bangalore, Karnataka",
+      "type": "rent",
+      "rentalPrice": 35000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 950
+      }
+    },
+    {
+      "title": "Elegant Villa for Sale in Jubilee Hills",
+      "description": "Independent villa with garden, swimming pool, servant quarters, and covered parking for 3 cars. Premium gated community.",
+      "location": "Jubilee Hills, Hyderabad, Telangana",
+      "type": "sale",
+      "sellingPrice": 35000000,
+      "discountedPrice": 32000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 4,
+        "bathrooms": 4,
+        "area": 3200
+      }
+    },
+    {
+      "title": "Cozy 1BHK Studio in Connaught Place",
+      "description": "Compact yet comfortable studio apartment in Delhi's business district. Perfect for working professionals.",
+      "location": "Connaught Place, New Delhi, Delhi",
+      "type": "rent",
+      "rentalPrice": 28000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "area": 450
+      }
+    },
+    {
+      "title": "Spacious 4BHK Duplex in Sector 54",
+      "description": "Premium duplex with terrace garden, modular kitchen, wooden flooring, and club house access.",
+      "location": "Sector 54, Gurgaon, Haryana",
+      "type": "sale",
+      "sellingPrice": 18500000,
+      "discountedPrice": 17200000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 4,
+        "bathrooms": 3,
+        "area": 2100
+      }
+    },
+    {
+      "title": "Budget-Friendly 2BHK in Wakad",
+      "description": "Affordable 2-bedroom flat with basic amenities, good ventilation, and easy access to IT companies.",
+      "location": "Wakad, Pune, Maharashtra",
+      "type": "rent",
+      "rentalPrice": 18000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "area": 750
+      }
+    },
+    {
+      "title": "Luxury Penthouse in Marine Drive",
+      "description": "Exclusive penthouse with panoramic ocean view, private terrace, jacuzzi, and premium interiors.",
+      "location": "Marine Drive, Mumbai, Maharashtra",
+      "type": "sale",
+      "sellingPrice": 85000000,
+      "discountedPrice": 78000000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 5,
+        "bathrooms": 4,
+        "area": 4500
+      }
+    },
+    {
+      "title": "Traditional House in Old City",
+      "description": "Heritage property with traditional architecture, courtyard, and modern amenities. Rich cultural surroundings.",
+      "location": "Charminar, Hyderabad, Telangana",
+      "type": "rent",
+      "rentalPrice": 22000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 1100
+      }
+    },
+    {
+      "title": "Tech City Apartment in Whitefield",
+      "description": "Modern 3BHK in tech hub with gym, swimming pool, children's play area, and 24/7 security.",
+      "location": "Whitefield, Bangalore, Karnataka",
+      "type": "rent",
+      "rentalPrice": 42000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 1350
+      }
+    },
+    {
+      "title": "Affordable Plot in Electronic City",
+      "description": "Residential plot ready for construction. Good connectivity, water, electricity available. Clear title.",
+      "location": "Electronic City Phase 2, Bangalore, Karnataka",
+      "type": "sale",
+      "sellingPrice": 4500000,
+      "houseSpecifications": {
+        "type": "land",
+        "bedrooms": 0,
+        "bathrooms": 0,
+        "area": 1800
+      }
+    },
+    {
+      "title": "Premium 3BHK in DLF Phase 3",
+      "description": "High-end apartment with imported fittings, central AC, and access to golf course. Prime location.",
+      "location": "DLF Phase 3, Gurgaon, Haryana",
+      "type": "rent",
+      "rentalPrice": 65000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "area": 1450
+      }
+    },
+    {
+      "title": "Beachside Villa in ECR",
+      "description": "Stunning villa with private beach access, infinity pool, landscaped garden, and modern amenities.",
+      "location": "East Coast Road, Chennai, Tamil Nadu",
+      "type": "sale",
+      "sellingPrice": 25000000,
+      "discountedPrice": 23000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 4,
+        "bathrooms": 4,
+        "area": 2800
+      }
+    },
+    {
+      "title": "Student-Friendly PG in Kothrud",
+      "description": "Furnished single room with attached bathroom, Wi-Fi, meals included. Near colleges and bus stop.",
+      "location": "Kothrud, Pune, Maharashtra",
+      "type": "rent",
+      "rentalPrice": 12000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "area": 200
+      }
+    },
+    {
+      "title": "Family House in Salt Lake",
+      "description": "Spacious family home with parking, small garden, and quiet neighborhood. Good for families with children.",
+      "location": "Salt Lake City, Kolkata, West Bengal",
+      "type": "rent",
+      "rentalPrice": 30000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 1200
+      }
+    },
+    {
+      "title": "Commercial Space in Cyber City",
+      "description": "Modern office space with high-speed internet, conference rooms, parking, and cafeteria access.",
+      "location": "Cyber City, Gurgaon, Haryana",
+      "type": "rent",
+      "rentalPrice": 120000,
+      "houseSpecifications": {
+        "type": "other",
+        "bedrooms": 0,
+        "bathrooms": 2,
+        "area": 2000
+      }
+    },
+    {
+      "title": "Vintage Bungalow in Civil Lines",
+      "description": "Heritage bungalow with large verandas, high ceilings, and mature trees. Peaceful residential area.",
+      "location": "Civil Lines, Delhi, Delhi",
+      "type": "sale",
+      "sellingPrice": 45000000,
+      "discountedPrice": 42000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 5,
+        "bathrooms": 3,
+        "area": 3500
+      }
+    },
+    {
+      "title": "Modern 2BHK in Magarpatta",
+      "description": "Contemporary apartment with smart home features, gym access, and shopping complex within premises.",
+      "location": "Magarpatta City, Pune, Maharashtra",
+      "type": "rent",
+      "rentalPrice": 32000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 980
+      }
+    },
+    {
+      "title": "Luxury Villa in Sainikpuri",
+      "description": "Designer villa with home theater, wine cellar, multiple living areas, and landscaped outdoor spaces.",
+      "location": "Sainikpuri, Secunderabad, Telangana",
+      "type": "sale",
+      "sellingPrice": 28000000,
+      "discountedPrice": 26000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 4,
+        "bathrooms": 5,
+        "area": 3000
+      }
+    },
+    {
+      "title": "Compact 1BHK in Indiranagar",
+      "description": "Well-designed small apartment with efficient space utilization. Walking distance to metro and restaurants.",
+      "location": "Indiranagar, Bangalore, Karnataka",
+      "type": "rent",
+      "rentalPrice": 25000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "area": 500
+      }
+    },
+    {
+      "title": "Farmhouse in Chattarpur",
+      "description": "Rustic farmhouse with organic garden, bore well, solar panels, and peaceful rural setting.",
+      "location": "Chattarpur, Delhi, Delhi",
+      "type": "sale",
+      "sellingPrice": 15000000,
+      "discountedPrice": 14000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 5000
+      }
+    },
+    {
+      "title": "IT Professional's 2BHK in Kondapur",
+      "description": "Perfect for tech professionals with high-speed internet, backup power, and shuttle service to tech parks.",
+      "location": "Kondapur, Hyderabad, Telangana",
+      "type": "rent",
+      "rentalPrice": 28000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 900
+      }
+    },
+    {
+      "title": "Duplex Apartment in Anna Nagar",
+      "description": "Spacious duplex with separate living and dining areas, study room, and covered parking.",
+      "location": "Anna Nagar, Chennai, Tamil Nadu",
+      "type": "rent",
+      "rentalPrice": 45000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "area": 1600
+      }
+    },
+    {
+      "title": "Investment Property in Noida Extension",
+      "description": "Ready-to-move 2BHK apartment in developing area. Great potential for appreciation.",
+      "location": "Greater Noida West, Uttar Pradesh",
+      "type": "sale",
+      "sellingPrice": 3800000,
+      "discountedPrice": 3500000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 750
+      }
+    },
+    {
+      "title": "Heritage Haveli in Jaipur",
+      "description": "Restored haveli with traditional Rajasthani architecture, courtyards, and modern conveniences.",
+      "location": "Pink City, Jaipur, Rajasthan",
+      "type": "sale",
+      "sellingPrice": 12000000,
+      "discountedPrice": 11000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 6,
+        "bathrooms": 4,
+        "area": 4000
+      }
+    },
+    {
+      "title": "Tech Hub Apartment in Gachibowli",
+      "description": "Modern apartment in tech corridor with smart features, fitness center, and co-working spaces.",
+      "location": "Gachibowli, Hyderabad, Telangana",
+      "type": "rent",
+      "rentalPrice": 38000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 1100
+      }
+    },
+    {
+      "title": "Riverside Cottage in Rishikesh",
+      "description": "Peaceful cottage by the Ganges with meditation space, organic garden, and mountain views.",
+      "location": "Rishikesh, Uttarakhand",
+      "type": "rent",
+      "rentalPrice": 15000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "area": 800
+      }
+    },
+    {
+      "title": "High-Rise Apartment in Powai",
+      "description": "Premium apartment on high floor with lake view, club access, and proximity to business parks.",
+      "location": "Powai, Mumbai, Maharashtra",
+      "type": "rent",
+      "rentalPrice": 75000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "area": 1400
+      }
+    },
+    {
+      "title": "Affordable Housing in Pimpri",
+      "description": "Government scheme apartment with basic amenities, good connectivity, and reasonable pricing.",
+      "location": "Pimpri-Chinchwad, Pune, Maharashtra",
+      "type": "sale",
+      "sellingPrice": 2800000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "area": 450
+      }
+    },
+    {
+      "title": "Lavish 3BHK Apartment in Besant Nagar",
+      "description": "Sea‑facing 3 bedroom apartment with balcony, parking & pool in prime Chennai locality.",
+      "location": "Besant Nagar, Chennai, Tamil Nadu",
+      "type": "rent",
+      "rentalPrice": 45000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 1400
+      }
+    },
+    {
+      "title": "Designer Villa in Coimbatore",
+      "description": "Independent villa with garden, terrace and smart‑home features in premium gated enclave.",
+      "location": "Coimbatore, Tamil Nadu",
+      "type": "sale",
+      "sellingPrice": 22000000,
+      "discountedPrice": 20000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 4,
+        "bathrooms": 3,
+        "area": 2800
+      }
+    },
+    {
+      "title": "Modern 2BHK Flat in Aluva",
+      "description": "Well‑ventilated flat near Kochi metro, gym, and park—ideal for young families.",
+      "location": "Aluva, Kochi, Kerala",
+      "type": "rent",
+      "rentalPrice": 20000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 1100
+      }
+    },
+    {
+      "title": "Heritage Home in Fort Kochi",
+      "description": "Restored Portuguese‑style house with courtyard, modern kitchen; rare cultural charm.",
+      "location": "Fort Kochi, Kochi, Kerala",
+      "type": "rent",
+      "rentalPrice": 28000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 1500
+      }
+    },
+    {
+      "title": "Hi‑Tech 3BHK in Hi‑Tech City",
+      "description": "Smart apartment with 24/7 backup, gym access, near IT parks in Hyderabad.",
+      "location": "Hi‑Tech City, Hyderabad, Telangana",
+      "type": "rent",
+      "rentalPrice": 48000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "area": 1300
+      }
+    },
+    {
+      "title": "Sea‑View Flat in Alappuzha",
+      "description": "2 BHK apartment overlooking backwaters with balcony and serene vibes.",
+      "location": "Alappuzha, Kerala",
+      "type": "rent",
+      "rentalPrice": 18000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 1000
+      }
+    },
+    {
+      "title": "Luxury Villa in Whitefield, Bengaluru",
+      "description": "Designer independent villa with private pool and garden near IT hubs.",
+      "location": "Whitefield, Bangalore, Karnataka",
+      "type": "sale",
+      "sellingPrice": 45000000,
+      "discountedPrice": 42000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 5,
+        "bathrooms": 4,
+        "area": 3500
+      }
+    },
+    {
+      "title": "Compact 1BHK in Mylapore",
+      "description": "Efficient studio-style flat near temples, cafes, metro—perfect for singles.",
+      "location": "Mylapore, Chennai, Tamil Nadu",
+      "type": "rent",
+      "rentalPrice": 22000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "area": 480
+      }
+    },
+    {
+      "title": "Modern 2BHK in Secunderabad",
+      "description": "High‑rise flat with gym, club, backup power; close to metro and military cantonment.",
+      "location": "Secunderabad, Telangana",
+      "type": "rent",
+      "rentalPrice": 30000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 1050
+      }
+    },
+    {
+      "title": "Eco‑villa in Wayanad",
+      "description": "Forest‑facing villa with organic garden, sustainable solar‑powered living.",
+      "location": "Wayanad, Kerala",
+      "type": "sale",
+      "sellingPrice": 12000000,
+      "discountedPrice": 11000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 2000
+      }
+    },
+    {
+      "title": "Luxury Row House in Alkapuri",
+      "description": "Premium row house with private garden, car porch, and access to community amenities.",
+      "location": "Alkapuri, Vadodara, Gujarat",
+      "type": "sale",
+      "sellingPrice": 8500000,
+      "discountedPrice": 8000000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "area": 1800
+      }
+    },
+    {
+      "title": "Studio Apartment in Sector 18",
+      "description": "Modern studio with murphy bed, kitchenette, and balcony. Close to metro and shopping mall.",
+      "location": "Sector 18, Noida, Uttar Pradesh",
+      "type": "rent",
+      "rentalPrice": 16000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "area": 350
+      }
+    },
+    {
+      "title": "Chic 2BHK Condo in Downtown Toronto",
+      "description": "Modern 2‑bedroom condo with city views, gym & transit access.",
+      "location": "Downtown, Toronto, Ontario, Canada",
+      "type": "rent",
+      "rentalPrice": 2800,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 2,
+        "area": 950
+      }
+    },
+    {
+      "title": "Historic Flat in Bloomsbury",
+      "description": "Georgian‑era 1BHK with high ceilings, near British Museum.",
+      "location": "Bloomsbury, London, UK",
+      "type": "rent",
+      "rentalPrice": 2200,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 1,
+        "bathrooms": 1,
+        "area": 600
+      }
+    },
+    {
+      "title": "Luxury Villa for Sale in Tuscany",
+      "description": "Stone villa with vineyard, pool, and panoramic hill views.",
+      "location": "Tuscany, Italy",
+      "type": "sale",
+      "sellingPrice": 1200000,
+      "discountedPrice": 1100000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 4,
+        "bathrooms": 3,
+        "area": 2800
+      }
+    },
+    {
+      "title": "Sunny Studio in Melbourne CBD",
+      "description": "Bright studio near tram stop and universities.",
+      "location": "Melbourne, Victoria, Australia",
+      "type": "rent",
+      "rentalPrice": 1800,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 0,
+        "bathrooms": 1,
+        "area": 450
+      }
+    },
+    {
+      "title": "Beachfront 3BHK in Miami",
+      "description": "Ocean‑front condo with balcony, pool and gym.",
+      "location": "Miami Beach, Florida, USA",
+      "type": "rent",
+      "rentalPrice": 5000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 1500
+      }
+    },
+    {
+      "title": "Alpine Chalet in Zermatt",
+      "description": "Chalet with ski‑in ski‑out access, wood interiors & alpine views.",
+      "location": "Zermatt, Switzerland",
+      "type": "sale",
+      "sellingPrice": 2500000,
+      "discountedPrice": 2400000,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 5,
+        "bathrooms": 4,
+        "area": 3000
+      }
+    },
+    {
+      "title": "Tokyo 2BHK Apartment Near Shibuya",
+      "description": "Compact modern apartment steps from Shibuya station.",
+      "location": "Shibuya, Tokyo, Japan",
+      "type": "rent",
+      "rentalPrice": 250000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "area": 700
+      }
+    },
+    {
+      "title": "Luxury Penthouse in Dubai Marina",
+      "description": "Penthouse with marina view, private terrace and pool.",
+      "location": "Dubai Marina, Dubai, UAE",
+      "type": "sale",
+      "sellingPrice": 4500000,
+      "discountedPrice": 4200000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 4,
+        "bathrooms": 4,
+        "area": 3000
+      }
+    },
+    {
+      "title": "Countryside Cottage in Devon",
+      "description": "Quaint 2‑bedroom cottage with garden, near coast.",
+      "location": "Devon, England, UK",
+      "type": "rent",
+      "rentalPrice": 1500,
+      "houseSpecifications": {
+        "type": "house",
+        "bedrooms": 2,
+        "bathrooms": 1,
+        "area": 850
+      }
+    },
+    {
+      "title": "Modern 3BHK Flat in Cape Town",
+      "description": "Sea‑view 3‑bedroom apartment with secure parking & pool.",
+      "location": "Sea Point, Cape Town, South Africa",
+      "type": "sale",
+      "sellingPrice": 3500000,
+      "discountedPrice": 3200000,
+      "houseSpecifications": {
+        "type": "apartment",
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 1400
+      }
+    }
+  ]
+}

@@ -12,6 +12,7 @@ import {
   Bath,
   Square,
   IndianRupee,
+  Shuffle,
 } from "lucide-react";
 import {
   createListingSchema,
@@ -23,8 +24,7 @@ import type { CreateListingData } from "../types/listing.types";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../redux/user/userSlice";
 import LoadingOverlay from "../components/LoadingOverlay";
-
-// TODO IMP : GIVE A BUTTON to GENERATE RANDOM DATA THROUGH FAKE API OR AI
+import randomListingData from "../data/randomListingData.json"; // Add this import
 
 const CreateListing = () => {
   const navigate = useNavigate();
@@ -43,6 +43,7 @@ const CreateListing = () => {
     handleSubmit,
     watch,
     formState: { errors },
+    setValue, // for setting form values programmatically through random data
   } = useForm<CreateListingFormData>({
     resolver: zodResolver(createListingSchema),
     defaultValues: {
@@ -65,6 +66,60 @@ const CreateListing = () => {
       unregister("rentalPrice");
     }
   }, [watchType, unregister]);
+
+  // ✅ HELPER FUNCTION - Easy to remove in future
+  const populateRandomData = () => {
+    const randomIndex = Math.floor(
+      Math.random() * randomListingData.listings.length
+    );
+    const randomListing = randomListingData.listings[randomIndex];
+
+    // Populate all form fields with random data
+    setValue("title", randomListing.title);
+    setValue("description", randomListing.description);
+    setValue("location", randomListing.location);
+    setValue("type", randomListing.type as "rent" | "sale");
+    setValue(
+      "houseSpecifications.type",
+      randomListing.houseSpecifications.type as
+        | "apartment"
+        | "house"
+        | "land"
+        | "other"
+    );
+    setValue(
+      "houseSpecifications.bedrooms",
+      randomListing.houseSpecifications.bedrooms
+    );
+    setValue(
+      "houseSpecifications.bathrooms",
+      randomListing.houseSpecifications.bathrooms
+    );
+    setValue(
+      "houseSpecifications.area",
+      randomListing.houseSpecifications.area
+    );
+
+    // Set price based on type
+    if (randomListing.type === "rent") {
+      setValue("rentalPrice", randomListing.rentalPrice);
+      // Clear sale prices if switching from sale to rent
+      setValue("sellingPrice", undefined);
+      setValue("discountedPrice", undefined);
+    } else {
+      setValue("sellingPrice", randomListing.sellingPrice);
+      if (randomListing.discountedPrice) {
+        setValue("discountedPrice", randomListing.discountedPrice);
+      }
+      // Clear rent price if switching from rent to sale
+      setValue("rentalPrice", undefined);
+    }
+
+    showSuccessToast(
+      "Random Data Added! 🎲",
+      `Loaded: ${randomListing.title.substring(0, 30)}...`
+    );
+  };
 
   const simulateLoadingMessages = () => {
     const loadingSequence = [
@@ -185,12 +240,33 @@ const CreateListing = () => {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="font-xtradex text-3xl lg:text-4xl font-bold text-primary mb-2">
-              Create New Listing
-            </h1>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <h1 className="font-xtradex text-3xl lg:text-4xl font-bold text-primary">
+                Create New Listing
+              </h1>
+              {/* ✅ RANDOM DATA BUTTON - Easy to remove */}
+              <button
+                type="button"
+                onClick={populateRandomData}
+                className="hidden md:absolute md:inline-flex md:right-10 items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
+                title="Fill form with random property data"
+              >
+                <Shuffle className="w-4 h-4" />
+                Add Random Data
+              </button>
+            </div>
             <p className="text-muted">
               Add your property to EstateX marketplace
             </p>
+            <button
+              type="button"
+              onClick={populateRandomData}
+              className="inline-flex mt-4 md:hidden items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-medium transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
+              title="Fill form with random property data"
+            >
+              <Shuffle className="w-4 h-4" />
+              Add Random Data
+            </button>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
