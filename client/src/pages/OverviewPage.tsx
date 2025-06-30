@@ -201,13 +201,13 @@ const Overview = () => {
           </div>
 
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
             Discover your perfect property with India's most trusted real estate
             platform
           </p>
 
           {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-12">
+          <div className="max-w-[400px] md:max-w-2xl mx-auto mb-12">
             <form
               onSubmit={handleSearch}
               className="relative group hero-search"
@@ -225,7 +225,7 @@ const Overview = () => {
                   />
                   <button
                     type="submit"
-                    className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl"
+                    className="max-sm:w-[100px] bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl"
                   >
                     <span>Search</span>
                     <ArrowRight className="w-5 h-5" />
@@ -274,7 +274,7 @@ const Overview = () => {
           </div>
 
           {/* Scroll Indicator */}
-          <div className="absolute bottom-15 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="absolute -bottom-15 md:bottom-15 left-1/2 transform -translate-x-1/2 animate-bounce">
             <ChevronDown className="w-8 h-8 text-gray-400" />
           </div>
         </div>

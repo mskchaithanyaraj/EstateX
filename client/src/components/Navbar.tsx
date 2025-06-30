@@ -268,142 +268,172 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Search Bar */}
-        <div className="md:hidden pb-3">
-          <form onSubmit={handleSearch}>
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search properties by location..."
-                className="w-full bg-input text-primary 
-                         border border-input rounded-full py-2 pl-4 pr-10 
-                         focus:outline-none focus:border-input-focus focus:ring-2 focus:ring-orange-500/20
-                         transition-all duration-300 placeholder-gray-500 dark:placeholder-gray-400"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 
-                         text-muted hover:text-accent 
-                         transition-colors duration-200"
-              >
-                <Search size={18} />
-              </button>
-            </div>
-          </form>
-        </div>
+        {/* Mobile Search Bar - Only show when menu is closed */}
+        {!isMenuOpen && (
+          <div className="md:hidden pb-3">
+            <form onSubmit={handleSearch}>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search properties by location..."
+                  className="w-full bg-input text-primary 
+                           border border-input rounded-full py-2 pl-4 pr-10 
+                           focus:outline-none focus:border-input-focus focus:ring-2 focus:ring-orange-500/20
+                           transition-all duration-300 placeholder-gray-500 dark:placeholder-gray-400"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 
+                           text-muted hover:text-accent 
+                           transition-colors duration-200"
+                >
+                  <Search size={18} />
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
 
-      {/* Mobile Navigation Menu */}
+      {/* Modern Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-nav border-t border-default shadow-lg">
-          <div className="px-4 py-3 space-y-3">
-            {[
-              ...(currentUser
-                ? [{ to: "/", label: "Home" }]
-                : [{ to: "/overview", label: "Overview" }]),
-            ].map(({ to, label }) => (
-              <Link
-                key={to}
-                to={to}
-                className="block text-primary hover:text-accent 
-                         transition-colors duration-200 font-medium py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {label}
-              </Link>
-            ))}
-            <Link
-              to="/my-listings"
-              className="flex items-center space-x-3 px-4 py-2 text-primary hover:bg-section
-             transition-colors duration-200 group"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <Home size={16} className="text-muted group-hover:text-accent" />
-              <span>My Listings</span>
-            </Link>
-            {/* Mobile Create Listing Button */}
-            {currentUser && (
-              <Link
-                to="/create-listing"
-                className="btn-primary px-4 py-3 rounded-xl font-medium text-center
-                     transition-all duration-300 hover:shadow-lg flex items-center justify-center space-x-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <Plus className="w-4 h-4" />
-                <span>List Your Property</span>
-              </Link>
-            )}
-            {/* Mobile Auth/Profile Section */}
-            <div className="pt-3 border-t border-default space-y-3">
-              {currentUser ? (
-                // Mobile Profile Section
-                <>
-                  <div className="flex items-center space-x-3 py-2">
-                    <img
-                      src={
-                        currentUser.avatar?.url ||
-                        `https://ui-avatars.com/api/?name=${currentUser.username}&background=f97316&color=fff`
-                      }
-                      alt={currentUser.username}
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
-                    <div>
-                      <p className="text-primary font-medium text-sm">
-                        {currentUser.fullname || currentUser.username}
-                      </p>
-                      <p className="text-muted text-xs">{currentUser.email}</p>
-                    </div>
+        <div className="md:hidden fixed inset-x-0 top-16 z-50 h-[calc(100vh-4rem)]">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsMenuOpen(false)}
+          />
+
+          {/* Menu Panel */}
+          <div className="relative bg-white dark:bg-gray-900 h-full overflow-y-auto shadow-2xl">
+            <div className="p-6 space-y-4">
+              {/* Profile Section (if signed in) */}
+              {currentUser && (
+                <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                  <img
+                    src={currentUser.avatar?.url || blankProfileImage}
+                    alt={currentUser.username}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-gray-900 dark:text-white font-semibold text-base truncate">
+                      {currentUser.fullname || currentUser.username}
+                    </p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm truncate">
+                      {currentUser.email}
+                    </p>
                   </div>
-                  <Link
-                    to="/profile"
-                    className="block text-primary hover:text-accent 
-                 transition-colors duration-200 font-medium py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="block text-primary hover:text-accent 
-                 transition-colors duration-200 font-medium py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Settings
-                  </Link>
-                  <button
-                    onClick={() => {
-                      handleSignOut();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full text-left text-red-600 dark:text-red-400
-                 transition-colors duration-200 font-medium py-2"
-                  >
-                    Sign Out
-                  </button>
-                </>
-              ) : (
-                // Mobile Auth Buttons
-                <>
-                  <Link
-                    to="/sign-in"
-                    className="block text-primary hover:text-accent 
-                 transition-colors duration-200 font-medium py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    to="/sign-up"
-                    className="block btn-primary px-4 py-2 rounded-full font-medium text-center
-                 transition-all duration-300 hover:shadow-lg"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </>
+                </div>
               )}
+
+              {/* Navigation Links */}
+              <div className="space-y-2">
+                {[
+                  ...(currentUser
+                    ? [{ to: "/", label: "Home", icon: Home }]
+                    : [{ to: "/overview", label: "Overview", icon: Home }]),
+                  ...(currentUser
+                    ? [{ to: "/my-listings", label: "My Listings", icon: User }]
+                    : []),
+                ].map(({ to, label, icon: Icon }) => (
+                  <Link
+                    key={to}
+                    to={to}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center space-x-4 p-4 
+                               text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400
+                               hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl
+                               transition-all duration-200"
+                  >
+                    <Icon size={20} />
+                    <span className="font-medium">{label}</span>
+                  </Link>
+                ))}
+
+                {/* Create Listing Button */}
+                {currentUser && (
+                  <Link
+                    to="/create-listing"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center justify-center space-x-2 p-4 mt-4
+                               bg-orange-600 hover:bg-orange-700 text-white
+                               rounded-xl font-semibold
+                               transition-all duration-200"
+                  >
+                    <Plus size={20} />
+                    <span>List Property</span>
+                  </Link>
+                )}
+              </div>
+
+              {/* Account Actions */}
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
+                {currentUser ? (
+                  <>
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center space-x-4 p-4 
+                                 text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400
+                                 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl
+                                 transition-all duration-200"
+                    >
+                      <User size={20} />
+                      <span className="font-medium">Profile</span>
+                    </Link>
+
+                    <Link
+                      to="/settings"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center space-x-4 p-4 
+                                 text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400
+                                 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl
+                                 transition-all duration-200"
+                    >
+                      <Settings size={20} />
+                      <span className="font-medium">Settings</span>
+                    </Link>
+
+                    <button
+                      onClick={() => {
+                        handleSignOut();
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full flex items-center space-x-4 p-4 
+                                 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30
+                                 rounded-xl transition-all duration-200"
+                    >
+                      <LogOut size={20} />
+                      <span className="font-medium">Sign Out</span>
+                    </button>
+                  </>
+                ) : (
+                  <div className="space-y-3">
+                    <Link
+                      to="/sign-in"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-center p-4 
+                                 border border-orange-600 text-orange-600 dark:text-orange-400
+                                 rounded-xl font-semibold hover:bg-orange-50 dark:hover:bg-orange-950/20
+                                 transition-all duration-200"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/sign-up"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-center p-4 
+                                 bg-orange-600 hover:bg-orange-700 text-white
+                                 rounded-xl font-semibold
+                                 transition-all duration-200"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
