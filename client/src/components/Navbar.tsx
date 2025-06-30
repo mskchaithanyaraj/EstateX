@@ -261,9 +261,26 @@ const Navbar = () => {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-primary hover:text-accent 
-                       p-2 transition-colors duration-200"
+                       p-2 transition-colors duration-200 relative"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {/* Animated Hamburger/Cross Icon */}
+              <div className="w-6 h-6 flex flex-col justify-center items-center">
+                <span
+                  className={`block h-0.5 w-6 bg-current transition-all duration-300 ease-in-out ${
+                    isMenuOpen ? "rotate-45 translate-y-0.5" : "translate-y-0"
+                  }`}
+                />
+                <span
+                  className={`block h-0.5 w-6 bg-current transition-all duration-300 ease-in-out my-1 ${
+                    isMenuOpen ? "opacity-0" : "opacity-100"
+                  }`}
+                />
+                <span
+                  className={`block h-0.5 w-6 bg-current transition-all duration-300 ease-in-out ${
+                    isMenuOpen ? "-rotate-45 -translate-y-0.5" : "translate-y-0"
+                  }`}
+                />
+              </div>
             </button>
           </div>
         </div>
@@ -300,18 +317,29 @@ const Navbar = () => {
       {/* Modern Mobile Navigation Menu */}
       {isMenuOpen && (
         <div className="md:hidden fixed inset-x-0 top-16 z-50 h-[calc(100vh-4rem)]">
-          {/* Backdrop */}
+          {/* Backdrop with fade-in animation */}
           <div
-            className="absolute inset-0 bg-black/50"
+            className={`absolute inset-0 bg-black/50 transition-opacity duration-300 ease-in-out ${
+              isMenuOpen ? "opacity-100" : "opacity-0"
+            }`}
             onClick={() => setIsMenuOpen(false)}
           />
 
-          {/* Menu Panel */}
-          <div className="relative bg-white dark:bg-gray-900 h-full overflow-y-auto shadow-2xl">
+          {/* Menu Panel with slide-in animation */}
+          <div
+            className={`relative bg-white dark:bg-gray-900 h-full overflow-y-auto shadow-2xl
+                       transform transition-transform duration-300 ease-in-out ${
+                         isMenuOpen ? "translate-x-0" : "translate-x-full"
+                       }`}
+          >
             <div className="p-6 space-y-4">
               {/* Profile Section (if signed in) */}
               {currentUser && (
-                <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                <div
+                  className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl
+                             transform transition-all duration-500 delay-100 ease-out
+                             animate-fadeInUp"
+                >
                   <img
                     src={currentUser.avatar?.url || blankProfileImage}
                     alt={currentUser.username}
@@ -328,7 +356,7 @@ const Navbar = () => {
                 </div>
               )}
 
-              {/* Navigation Links */}
+              {/* Navigation Links with staggered animation */}
               <div className="space-y-2">
                 {[
                   ...(currentUser
@@ -337,22 +365,27 @@ const Navbar = () => {
                   ...(currentUser
                     ? [{ to: "/my-listings", label: "My Listings", icon: User }]
                     : []),
-                ].map(({ to, label, icon: Icon }) => (
+                ].map(({ to, label, icon: Icon }, index) => (
                   <Link
                     key={to}
                     to={to}
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-4 p-4 
+                    className={`flex items-center space-x-4 p-4 
                                text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400
                                hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl
-                               transition-all duration-200"
+                               transition-all duration-200 transform hover:scale-105
+                               animate-slideInFromRight`}
+                    style={{
+                      animationDelay: `${(index + 1) * 100}ms`,
+                      animationFillMode: "both",
+                    }}
                   >
                     <Icon size={20} />
                     <span className="font-medium">{label}</span>
                   </Link>
                 ))}
 
-                {/* Create Listing Button */}
+                {/* Create Listing Button with special animation */}
                 {currentUser && (
                   <Link
                     to="/create-listing"
@@ -360,7 +393,12 @@ const Navbar = () => {
                     className="flex items-center justify-center space-x-2 p-4 mt-4
                                bg-orange-600 hover:bg-orange-700 text-white
                                rounded-xl font-semibold
-                               transition-all duration-200"
+                               transition-all duration-200 transform hover:scale-105 hover:shadow-lg
+                               animate-bounceIn"
+                    style={{
+                      animationDelay: "400ms",
+                      animationFillMode: "both",
+                    }}
                   >
                     <Plus size={20} />
                     <span>List Property</span>
@@ -368,8 +406,15 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* Account Actions */}
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2">
+              {/* Account Actions with fade-in animation */}
+              <div
+                className="border-t border-gray-200 dark:border-gray-700 pt-4 space-y-2
+                           animate-fadeInUp"
+                style={{
+                  animationDelay: "500ms",
+                  animationFillMode: "both",
+                }}
+              >
                 {currentUser ? (
                   <>
                     <Link
@@ -378,7 +423,7 @@ const Navbar = () => {
                       className="flex items-center space-x-4 p-4 
                                  text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400
                                  hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl
-                                 transition-all duration-200"
+                                 transition-all duration-200 transform hover:scale-105"
                     >
                       <User size={20} />
                       <span className="font-medium">Profile</span>
@@ -390,7 +435,7 @@ const Navbar = () => {
                       className="flex items-center space-x-4 p-4 
                                  text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400
                                  hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl
-                                 transition-all duration-200"
+                                 transition-all duration-200 transform hover:scale-105"
                     >
                       <Settings size={20} />
                       <span className="font-medium">Settings</span>
@@ -403,7 +448,7 @@ const Navbar = () => {
                       }}
                       className="w-full flex items-center space-x-4 p-4 
                                  text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30
-                                 rounded-xl transition-all duration-200"
+                                 rounded-xl transition-all duration-200 transform hover:scale-105"
                     >
                       <LogOut size={20} />
                       <span className="font-medium">Sign Out</span>
@@ -417,7 +462,7 @@ const Navbar = () => {
                       className="block text-center p-4 
                                  border border-orange-600 text-orange-600 dark:text-orange-400
                                  rounded-xl font-semibold hover:bg-orange-50 dark:hover:bg-orange-950/20
-                                 transition-all duration-200"
+                                 transition-all duration-200 transform hover:scale-105"
                     >
                       Sign In
                     </Link>
@@ -427,7 +472,7 @@ const Navbar = () => {
                       className="block text-center p-4 
                                  bg-orange-600 hover:bg-orange-700 text-white
                                  rounded-xl font-semibold
-                                 transition-all duration-200"
+                                 transition-all duration-200 transform hover:scale-105 hover:shadow-lg"
                     >
                       Sign Up
                     </Link>
