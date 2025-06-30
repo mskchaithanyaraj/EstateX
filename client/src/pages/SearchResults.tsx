@@ -16,7 +16,9 @@ import {
 } from "lucide-react";
 import { listingAPI } from "../services/api";
 import { showErrorToast } from "../utils/custom-toast";
+import { useDebounce } from "../utils/useDebounce";
 import LoadingOverlay from "../components/LoadingOverlay";
+import InlineLoading from "../components/InlineLoading";
 import type { Listing } from "../types/listing.types";
 
 interface SearchFilters {
@@ -37,8 +39,14 @@ const SearchResults = () => {
   const [listings, setListings] = useState<Listing[]>([]);
   const [filteredListings, setFilteredListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isFilterLoading, setIsFilterLoading] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [minPriceInput, setMinPriceInput] = useState("");
+  const [maxPriceInput, setMaxPriceInput] = useState("");
+  const debouncedMinPrice = useDebounce(minPriceInput, 800);
+  const debouncedMaxPrice = useDebounce(maxPriceInput, 800);
   const [filters, setFilters] = useState<SearchFilters>({
     location: searchParams.get("location") || "",
     type: (searchParams.get("type") as "rent" | "sale") || "",
@@ -116,23 +124,67 @@ const SearchResults = () => {
     }));
   }, [searchParams]);
 
-  // Fetch listings when filters change
+  // Sync debounced prices with filters
+  useEffect(() => {
+    const minPrice = debouncedMinPrice ? Number(debouncedMinPrice) : undefined;
+    const maxPrice = debouncedMaxPrice ? Number(debouncedMaxPrice) : undefined;
+    if (minPrice !== filters.minPrice || maxPrice !== filters.maxPrice) {
+      setFilters((prev) => ({ ...prev, minPrice, maxPrice }));
+    }
+  }, [
+    debouncedMinPrice,
+    debouncedMaxPrice,
+    filters.minPrice,
+    filters.maxPrice,
+  ]);
+
+  // Initialize price inputs with URL params
+  useEffect(() => {
+    const urlMinPrice = searchParams.get("minPrice") || "";
+    const urlMaxPrice = searchParams.get("maxPrice") || "";
+    setMinPriceInput(urlMinPrice);
+    setMaxPriceInput(urlMaxPrice);
+  }, [searchParams]);
+
+  // Fetch listings when significant filters change (not location text input)
   useEffect(() => {
     const fetchListings = async () => {
-      setIsLoading(true);
+      // Only show full loading on initial load
+      if (isInitialLoading) {
+        setIsLoading(true);
+      } else {
+        // Only show section loading for non-location filter changes
+        const isLocationOnlyChange =
+          Object.keys(filters).length === 1 && filters.location !== undefined;
+        if (!isLocationOnlyChange) {
+          setIsFilterLoading(true);
+        }
+      }
+
       try {
-        // Create filters object from current filters state
-        const searchFilters = {
-          ...filters,
-          // Ensure location comes from URL params if not in filters
-          location: filters.location || searchParams.get("location") || "",
+        // Only send server-side filters (not location for text search)
+        const serverFilters = {
+          type: filters.type,
+          minPrice: filters.minPrice,
+          maxPrice: filters.maxPrice,
+          bedrooms: filters.bedrooms,
+          bathrooms: filters.bathrooms,
+          propertyType: filters.propertyType,
+          minArea: filters.minArea,
+          maxArea: filters.maxArea,
+          sortBy: filters.sortBy,
+          // Only include location from URL params for initial search
+          ...(searchParams.get("location") && isInitialLoading
+            ? {
+                location: searchParams.get("location") || "",
+              }
+            : {}),
         };
 
-        console.log("Searching with filters:", searchFilters); // Debug log
+        console.log("Searching with server filters:", serverFilters); // Debug log
 
-        const allListings = await listingAPI.searchListings(searchFilters);
+        const allListings = await listingAPI.searchListings(serverFilters);
         setListings(allListings);
-        setFilteredListings(allListings); // Set both since backend handles filtering
       } catch (error) {
         console.error("Error fetching listings:", error);
         showErrorToast("Error", "Failed to fetch search results");
@@ -140,81 +192,44 @@ const SearchResults = () => {
         setFilteredListings([]);
       } finally {
         setIsLoading(false);
+        setIsInitialLoading(false);
+        setIsFilterLoading(false);
       }
     };
+
     fetchListings();
-  }, [filters, searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    filters.type,
+    filters.minPrice,
+    filters.maxPrice,
+    filters.bedrooms,
+    filters.bathrooms,
+    filters.propertyType,
+    filters.minArea,
+    filters.maxArea,
+    filters.sortBy,
+    searchParams,
+    isInitialLoading,
+  ]);
 
   useEffect(() => {
     const applyFilters = () => {
       let filtered = [...listings];
 
-      // Location filter
-      if (filters.location) {
+      // Location filter - now handled client-side for instant feedback
+      if (filters.location && filters.location.trim()) {
         filtered = filtered.filter((listing) =>
           listing.location
             .toLowerCase()
-            .includes(filters.location!.toLowerCase())
+            .includes(filters.location!.toLowerCase().trim())
         );
       }
 
-      // Type filter
-      if (filters.type) {
-        filtered = filtered.filter((listing) => listing.type === filters.type);
-      }
+      // Note: Other filters are now handled server-side in the API call
+      // This includes: type, price range, bedrooms, bathrooms, propertyType, area
 
-      // Price filter
-      if (filters.minPrice || filters.maxPrice) {
-        filtered = filtered.filter((listing) => {
-          const price =
-            listing.type === "sale"
-              ? listing.discountedPrice && listing.discountedPrice > 0
-                ? listing.discountedPrice
-                : listing.sellingPrice
-              : listing.rentalPrice;
-
-          if (!price) return false;
-
-          const minCheck = !filters.minPrice || price >= filters.minPrice;
-          const maxCheck = !filters.maxPrice || price <= filters.maxPrice;
-
-          return minCheck && maxCheck;
-        });
-      }
-
-      // Bedrooms filter
-      if (filters.bedrooms !== undefined) {
-        filtered = filtered.filter(
-          (listing) => listing.houseSpecifications.bedrooms >= filters.bedrooms!
-        );
-      }
-
-      // Bathrooms filter
-      if (filters.bathrooms !== undefined) {
-        filtered = filtered.filter(
-          (listing) =>
-            listing.houseSpecifications.bathrooms >= filters.bathrooms!
-        );
-      }
-
-      // Property type filter
-      if (filters.propertyType) {
-        filtered = filtered.filter(
-          (listing) => listing.houseSpecifications.type === filters.propertyType
-        );
-      }
-
-      // Area filter
-      if (filters.minArea || filters.maxArea) {
-        filtered = filtered.filter((listing) => {
-          const area = listing.houseSpecifications.area;
-          const minCheck = !filters.minArea || area >= filters.minArea;
-          const maxCheck = !filters.maxArea || area <= filters.maxArea;
-          return minCheck && maxCheck;
-        });
-      }
-
-      // Sorting
+      // Sorting (client-side for immediate feedback)
       if (filters.sortBy) {
         filtered.sort((a, b) => {
           switch (filters.sortBy) {
@@ -269,7 +284,7 @@ const SearchResults = () => {
       setFilteredListings(filtered);
     };
     applyFilters();
-  }, [listings, filters]);
+  }, [listings, filters.location, filters.sortBy]);
 
   const updateFilters = (newFilters: Partial<SearchFilters>) => {
     const updatedFilters = { ...filters, ...newFilters };
@@ -293,6 +308,10 @@ const SearchResults = () => {
     };
     setFilters(clearedFilters);
     setSearchParams(new URLSearchParams());
+
+    // Reset input states
+    setMinPriceInput("");
+    setMaxPriceInput("");
   };
 
   const formatPrice = (price: number) => {
@@ -311,7 +330,7 @@ const SearchResults = () => {
     });
   };
 
-  if (isLoading) {
+  if (isLoading && isInitialLoading) {
     return (
       <LoadingOverlay isVisible={true} message="Searching properties..." />
     );
@@ -412,9 +431,16 @@ const SearchResults = () => {
               <div className="bg-card rounded-2xl border border-default p-6 h-full lg:h-auto lg:sticky lg:top-24 overflow-y-auto">
                 {/* Mobile Close Button */}
                 <div className="flex items-center justify-between mb-6 lg:hidden">
-                  <h3 className="text-lg font-semibold text-primary">
-                    Filters
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-primary">
+                      Filters
+                    </h3>
+                    <InlineLoading
+                      isVisible={isFilterLoading}
+                      message=""
+                      size="sm"
+                    />
+                  </div>
                   <button
                     onClick={() => setShowFilters(false)}
                     className="w-8 h-8 flex items-center justify-center text-muted hover:text-primary transition-colors rounded-lg hover:bg-section"
@@ -425,9 +451,16 @@ const SearchResults = () => {
 
                 {/* Desktop Header */}
                 <div className="hidden lg:flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-semibold text-primary">
-                    Filters
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-primary">
+                      Filters
+                    </h3>
+                    <InlineLoading
+                      isVisible={isFilterLoading}
+                      message=""
+                      size="sm"
+                    />
+                  </div>
                   <button
                     onClick={clearFilters}
                     className="text-accent hover:text-accent/80 text-sm font-medium"
@@ -503,14 +536,8 @@ const SearchResults = () => {
                         <IndianRupee className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-muted" />
                         <input
                           type="number"
-                          value={filters.minPrice || ""}
-                          onChange={(e) =>
-                            updateFilters({
-                              minPrice: e.target.value
-                                ? Number(e.target.value)
-                                : undefined,
-                            })
-                          }
+                          value={minPriceInput}
+                          onChange={(e) => setMinPriceInput(e.target.value)}
                           placeholder="Min"
                           className="w-full pl-6 pr-2 py-2 bg-section border border-default rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-primary text-sm"
                         />
@@ -519,14 +546,8 @@ const SearchResults = () => {
                         <IndianRupee className="absolute left-2 top-1/2 transform -translate-y-1/2 w-3 h-3 text-muted" />
                         <input
                           type="number"
-                          value={filters.maxPrice || ""}
-                          onChange={(e) =>
-                            updateFilters({
-                              maxPrice: e.target.value
-                                ? Number(e.target.value)
-                                : undefined,
-                            })
-                          }
+                          value={maxPriceInput}
+                          onChange={(e) => setMaxPriceInput(e.target.value)}
                           placeholder="Max"
                           className="w-full pl-6 pr-2 py-2 bg-section border border-default rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-primary text-sm"
                         />
@@ -663,8 +684,8 @@ const SearchResults = () => {
             </div>
 
             {/* Results */}
-            <div className="flex-1 min-w-0">
-              {filteredListings.length === 0 ? (
+            <div className="flex-1 min-w-0 relative">
+              {filteredListings.length === 0 && !isFilterLoading ? (
                 <div className="text-center py-16">
                   <div className="bg-card rounded-2xl border border-default p-8 sm:p-12 max-w-md mx-auto">
                     <Search className="w-16 h-16 text-muted mx-auto mb-4" />
@@ -684,11 +705,13 @@ const SearchResults = () => {
                 </div>
               ) : (
                 <div
-                  className={
+                  className={`${
+                    isFilterLoading ? "opacity-50" : "opacity-100"
+                  } transition-opacity duration-200 ${
                     viewMode === "grid"
                       ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6"
                       : "space-y-4"
-                  }
+                  }`}
                 >
                   {filteredListings.map((listing) => (
                     <div
